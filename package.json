@@ -1,0 +1,31 @@
+{
+  "name": "image-resize",
+  "version": "0.0.1",
+  "description": "Image resizer for javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RedgooseDev/image-resize.git"
+  },
+  "keywords": [
+    "image",
+    "resize",
+    "resizer",
+    "canvas",
+    "javascript",
+    "js"
+  ],
+  "author": {
+    "name": "redgoose",
+    "email": "scripter@me.com",
+    "url": "http://redgoose.me"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RedgooseDev/image-resize/issues"
+  },
+  "homepage": "https://github.com/RedgooseDev/image-resize#readme"
+}
