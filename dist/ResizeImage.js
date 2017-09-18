@@ -7,11 +7,21 @@
 function ResizeImage() {
 	console.log('hello rer11112122312');
 
-	console.log('bbbb');
-}
+	var foo = 'bar';
+	var asd = [1, 2, 3];
+	var asda = 'qweqweqw';
+	var foooo = function foooo() {
+		console.log('qweqweqweqweqweqwe123123123123123123123123123123123');
+	};
 
-module.exports = ResizeImage;
+	console.log('bbbb');
+	console.log(foo, asd, asda);
+	foooo();
+
+	this.roooo = 'rooooo';
+}
 
 return ResizeImage;
 
 })));
+//# sourceMappingURL=ResizeImage.js.map
