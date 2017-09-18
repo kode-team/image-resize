@@ -1,21 +1,82 @@
-const FOO = 'BAR';
+import Canvas from './parts/Canvas';
+import * as events from './parts/events';
+import * as defaultOptions from './parts/defaultOptions';
 
 
-function ResizeImage() {
-	console.log('hello rer11112122312');
+/**
+ * Resize image
+ *
+ * @param {Object} options
+ */
+function ResizeImage(options) {
 
-	const foo = 'bar';
-	let asd = [1,2,3];
-	var asda = 'qweqweqw';
-	const foooo = () => {
-		console.log('qweqweqweqweqweqwe123123123123123123123123123123123')
+	// assign options
+	let option = Object.assign({}, defaultOptions.base, options);
+
+
+	console.log('options', option);
+
+	this.play = function()
+	{
+
 	};
 
-	console.log('bbbb');
-	console.log(foo, asd, asda);
-	foooo();
+	/**
+	 * Play convert
+	 * 이미지 주소로 캔버스로 변환
+	 *
+	 * @param {String} src
+	 * @param {Object} options
+	 * @return {Promise}
+	 */
+	this.srcToCanvas = function(src, options)
+	{
+		// assign options
+		option = Object.assign({}, option, options);
 
-	this.roooo = 'rooooo';
+		// TODO : 이미지 url로 입력했을때 이미지를 가져와서 리사이즈를 하기
+		return new Promise(function(resolve, reject) {
+			events.loadImage(src).then(function(image) {
+				document.querySelector('main').appendChild(image);
+			});
+		});
+	};
+
+	/**
+	 * Upload to image
+	 * 첨부로 가져온 이미지를 캔버스로 변환
+	 *
+	 * @param {HTMLElement} element
+	 * @param {Object} options
+	 * @return {Promise}
+	 */
+	this.formToCanvas = function(element, options)
+	{
+		function error(e)
+		{
+			console.log('error event');
+		}
+
+		let canvas = null;
+		return new Promise(function(resolve, reject) {
+			const reader = new FileReader();
+			reader.onload = function(e)
+			{
+				const img = new Image();
+				img.onload = function()
+				{
+					canvas = new Canvas(img.width, img.height, option.bgColor);
+					canvas.ctx.drawImage(img, 0, 0);
+					resolve(canvas);
+				};
+				img.onerror = error;
+				img.src = e.target.result;
+			};
+			reader.onerror = error;
+			reader.readAsDataURL(element.target.files[0]);
+		});
+	};
+
 }
 
 
