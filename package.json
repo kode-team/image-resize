@@ -2,9 +2,10 @@
   "name": "image-resize",
   "version": "0.0.1",
   "description": "Image resizer for javascript",
-  "main": "index.js",
+  "main": "dist/ResizeImage.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "rollup -c -w",
+    "build": "rollup -c -p"
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,18 @@
   "bugs": {
     "url": "https://github.com/RedgooseDev/image-resize/issues"
   },
-  "homepage": "https://github.com/RedgooseDev/image-resize#readme"
+  "homepage": "https://github.com/RedgooseDev/image-resize#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-latest": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "babelrc-rollup": "^3.0.0",
+    "gulp": "^3.9.1",
+    "rollup": "^0.50.0",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^2.0.1"
+  }
 }
