@@ -7,4 +7,6 @@ export const base = {
 	reSample: 2,
 	bgColor: '#ff0000',
 
+	callback_ready: function () { console.log('READY PLAY'); },
+
 };

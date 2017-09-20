@@ -12,11 +12,11 @@ function ResizeImage(options) {
 
 	// assign options
 	let option = Object.assign({}, defaultOptions.base, options);
-	console.warn('options', option);
+	console.warn('DEFAULT OPTIONS', option);
 
 	/**
 	 * Play convert
-	 * 이미지 주소로 캔버스로 변환
+	 * 이미지 주소로 캔버스로 변환 -> 캔버스를 리사이즈 -> 이미지로 컨버트
 	 *
 	 * @param {String|Object} src
 	 * @param {Object} options
@@ -24,28 +24,42 @@ function ResizeImage(options) {
 	 */
 	this.play = function(src, options)
 	{
-		// TODO : src가 문자인지 첨부파일 폼 데이터인지 구분하기
+		// TODO OK : src가 문자인지 첨부파일 폼 데이터인지 구분하기
 		// TODO : canvas로 변환하기
 		// TODO : 리샘플링 수치에 따라 이미지 리사이즈 반복하기
 
 		// assign options
 		option = Object.assign({}, option, options);
 
-		console.log('action play');
+		// fire ready callback function
+		if (option.callback_ready)
+		{
+			option.callback_ready();
+		}
 
-		if (typeof src === 'string')
-		{
-			// image url
-		}
-		else if (typeof src === 'object')
-		{
-			// input[type=file] form
-			console.log(src.files);
-		}
-		else
-		{
-			// TODO : error처리
-		}
+		return new Promise((resolve, reject) => {
+			if (typeof src === 'string')
+			{
+				// image url
+				this.srcToCanvas(src)
+					.then((canvas) => this.resizeCanvas(canvas))
+					.then((canvas) => this.convert(canvas))
+					.then((result) => resolve(result))
+					.catch((error) => reject(error));
+			}
+			else if (typeof src === 'object')
+			{
+				// input[type=file] form
+				// TODO : 작업예정
+				this.formToCanvas(src)
+					.then((result) => resolve(result))
+					.catch((error) => reject(error));
+			}
+			else
+			{
+				reject(new Error('Not found source'));
+			}
+		});
 	};
 
 	/**
@@ -57,11 +71,22 @@ function ResizeImage(options) {
 	 */
 	this.srcToCanvas = function(src)
 	{
-		// TODO : 이미지 url로 입력했을때 이미지를 가져와서 리사이즈를 하기
+		let canvas = null;
 		return new Promise(function(resolve, reject) {
-			events.loadImage(src).then(function(image) {
-				document.querySelector('main').appendChild(image);
-			});
+			events.loadImage(src).then(
+				// resolve
+				function(img)
+				{
+					canvas = new Canvas(img.width, img.height, option.bgColor);
+					canvas.ctx.drawImage(img, 0, 0);
+					resolve(canvas);
+				},
+				// reject
+				function(error)
+				{
+					reject(error);
+				}
+			);
 		});
 	};
 
@@ -79,7 +104,7 @@ function ResizeImage(options) {
 			function error(e)
 			{
 				console.log('error event');
-				reject();
+				reject(e);
 			}
 
 			const reader = new FileReader();
@@ -99,6 +124,33 @@ function ResizeImage(options) {
 			reader.readAsDataURL(element.target.files[0]);
 		});
 	};
+
+	/**
+	 * Resize canvas
+	 *
+	 * @param {Canvas} canvas
+	 * @return {Promise}
+	 */
+	this.resizeCanvas = function(canvas)
+	{
+		return new Promise((resolve, reject) => {
+			resolve(canvas);
+		});
+	};
+
+	/**
+	 * Convert to image
+	 * 이미지 데이터로 변환
+	 *
+	 * @param {Canvas} canvas
+	 * @return {*}
+	 */
+	this.convert = function(canvas)
+	{
+		return new Promise((resolve, reject) => {
+			resolve(canvas);
+		});
+	}
 
 }
 

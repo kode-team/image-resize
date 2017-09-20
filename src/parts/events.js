@@ -6,7 +6,7 @@
  */
 export function loadImage(src)
 {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		if (src)
 		{
 			let image = new Image();
@@ -15,18 +15,17 @@ export function loadImage(src)
 			{
 				resolve(image);
 			};
-			image.onError = function(e)
+			image.onerror = function(e)
 			{
-				resolve(null);
+				reject(e);
 			};
 
-			console.warn(src);
 			image.setAttribute('crossOrigin', 'anonymous');
 			image.src = src;
 		}
 		else
 		{
-			resolve(null);
+			reject(new Error('no src'));
 		}
 	});
 }

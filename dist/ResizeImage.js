@@ -34,22 +34,21 @@ function Canvas() {
  * @return {Promise}
  */
 function loadImage(src) {
-	return new Promise(function (resolve) {
+	return new Promise(function (resolve, reject) {
 		if (src) {
 			var image = new Image();
 
 			image.onload = function (e) {
 				resolve(image);
 			};
-			image.onError = function (e) {
-				resolve(null);
+			image.onerror = function (e) {
+				reject(e);
 			};
 
-			console.warn(src);
 			image.setAttribute('crossOrigin', 'anonymous');
 			image.src = src;
 		} else {
-			resolve(null);
+			reject(new Error('no src'));
 		}
 	});
 }
@@ -61,7 +60,11 @@ var base = {
 	width: 320,
 	height: 240,
 	reSample: 2,
-	bgColor: '#ff0000'
+	bgColor: '#ff0000',
+
+	callback_ready: function callback_ready() {
+		console.log('READY PLAY');
+	}
 
 };
 
@@ -197,34 +200,55 @@ function ResizeImage(options) {
 
 	// assign options
 	var option = Object.assign({}, base, options);
-	console.warn('options', option);
+	console.warn('DEFAULT OPTIONS', option);
 
 	/**
   * Play convert
-  * 이미지 주소로 캔버스로 변환
+  * 이미지 주소로 캔버스로 변환 -> 캔버스를 리사이즈 -> 이미지로 컨버트
   *
   * @param {String|Object} src
   * @param {Object} options
   * @return {Promise}
   */
 	this.play = function (src, options) {
-		// TODO : src가 문자인지 첨부파일 폼 데이터인지 구분하기
+		var _this = this;
+
+		// TODO OK : src가 문자인지 첨부파일 폼 데이터인지 구분하기
 		// TODO : canvas로 변환하기
 		// TODO : 리샘플링 수치에 따라 이미지 리사이즈 반복하기
 
 		// assign options
 		option = Object.assign({}, option, options);
 
-		console.log('action play');
-
-		if (typeof src === 'string') {
-			// image url
-		} else if ((typeof src === 'undefined' ? 'undefined' : _typeof(src)) === 'object') {
-			// input[type=file] form
-			console.log(src.files);
-		} else {
-			// TODO : error처리
+		// fire ready callback function
+		if (option.callback_ready) {
+			option.callback_ready();
 		}
+
+		return new Promise(function (resolve, reject) {
+			if (typeof src === 'string') {
+				// image url
+				_this.srcToCanvas(src).then(function (canvas) {
+					return _this.resizeCanvas(canvas);
+				}).then(function (canvas) {
+					return _this.convert(canvas);
+				}).then(function (result) {
+					return resolve(result);
+				}).catch(function (error) {
+					return reject(error);
+				});
+			} else if ((typeof src === 'undefined' ? 'undefined' : _typeof(src)) === 'object') {
+				// input[type=file] form
+				// TODO : 작업예정
+				_this.formToCanvas(src).then(function (result) {
+					return resolve(result);
+				}).catch(function (error) {
+					return reject(error);
+				});
+			} else {
+				reject(new Error('Not found source'));
+			}
+		});
 	};
 
 	/**
@@ -235,10 +259,18 @@ function ResizeImage(options) {
   * @return {Promise}
   */
 	this.srcToCanvas = function (src) {
-		// TODO : 이미지 url로 입력했을때 이미지를 가져와서 리사이즈를 하기
+		var canvas = null;
 		return new Promise(function (resolve, reject) {
-			loadImage(src).then(function (image) {
-				document.querySelector('main').appendChild(image);
+			loadImage(src).then(
+			// resolve
+			function (img) {
+				canvas = new Canvas(img.width, img.height, option.bgColor);
+				canvas.ctx.drawImage(img, 0, 0);
+				resolve(canvas);
+			},
+			// reject
+			function (error) {
+				reject(error);
 			});
 		});
 	};
@@ -255,7 +287,7 @@ function ResizeImage(options) {
 		return new Promise(function (resolve, reject) {
 			function error(e) {
 				console.log('error event');
-				reject();
+				reject(e);
 			}
 
 			var reader = new FileReader();
@@ -271,6 +303,31 @@ function ResizeImage(options) {
 			};
 			reader.onerror = error;
 			reader.readAsDataURL(element.target.files[0]);
+		});
+	};
+
+	/**
+  * Resize canvas
+  *
+  * @param {Canvas} canvas
+  * @return {Promise}
+  */
+	this.resizeCanvas = function (canvas) {
+		return new Promise(function (resolve, reject) {
+			resolve(canvas);
+		});
+	};
+
+	/**
+  * Convert to image
+  * 이미지 데이터로 변환
+  *
+  * @param {Canvas} canvas
+  * @return {*}
+  */
+	this.convert = function (canvas) {
+		return new Promise(function (resolve, reject) {
+			resolve(canvas);
 		});
 	};
 }
