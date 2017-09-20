@@ -65,6 +65,129 @@ var base = {
 
 };
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+var asyncGenerator = function () {
+  function AwaitValue(value) {
+    this.value = value;
+  }
+
+  function AsyncGenerator(gen) {
+    var front, back;
+
+    function send(key, arg) {
+      return new Promise(function (resolve, reject) {
+        var request = {
+          key: key,
+          arg: arg,
+          resolve: resolve,
+          reject: reject,
+          next: null
+        };
+
+        if (back) {
+          back = back.next = request;
+        } else {
+          front = back = request;
+          resume(key, arg);
+        }
+      });
+    }
+
+    function resume(key, arg) {
+      try {
+        var result = gen[key](arg);
+        var value = result.value;
+
+        if (value instanceof AwaitValue) {
+          Promise.resolve(value.value).then(function (arg) {
+            resume("next", arg);
+          }, function (arg) {
+            resume("throw", arg);
+          });
+        } else {
+          settle(result.done ? "return" : "normal", result.value);
+        }
+      } catch (err) {
+        settle("throw", err);
+      }
+    }
+
+    function settle(type, value) {
+      switch (type) {
+        case "return":
+          front.resolve({
+            value: value,
+            done: true
+          });
+          break;
+
+        case "throw":
+          front.reject(value);
+          break;
+
+        default:
+          front.resolve({
+            value: value,
+            done: false
+          });
+          break;
+      }
+
+      front = front.next;
+
+      if (front) {
+        resume(front.key, front.arg);
+      } else {
+        back = null;
+      }
+    }
+
+    this._invoke = send;
+
+    if (typeof gen.return !== "function") {
+      this.return = undefined;
+    }
+  }
+
+  if (typeof Symbol === "function" && Symbol.asyncIterator) {
+    AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
+      return this;
+    };
+  }
+
+  AsyncGenerator.prototype.next = function (arg) {
+    return this._invoke("next", arg);
+  };
+
+  AsyncGenerator.prototype.throw = function (arg) {
+    return this._invoke("throw", arg);
+  };
+
+  AsyncGenerator.prototype.return = function (arg) {
+    return this._invoke("return", arg);
+  };
+
+  return {
+    wrap: function (fn) {
+      return function () {
+        return new AsyncGenerator(fn.apply(this, arguments));
+      };
+    },
+    await: function (value) {
+      return new AwaitValue(value);
+    }
+  };
+}();
+
 /**
  * Resize image
  *
@@ -74,23 +197,44 @@ function ResizeImage(options) {
 
 	// assign options
 	var option = Object.assign({}, base, options);
-
-	console.log('options', option);
-
-	this.play = function () {};
+	console.warn('options', option);
 
 	/**
   * Play convert
   * 이미지 주소로 캔버스로 변환
   *
-  * @param {String} src
+  * @param {String|Object} src
   * @param {Object} options
   * @return {Promise}
   */
-	this.srcToCanvas = function (src, options) {
+	this.play = function (src, options) {
+		// TODO : src가 문자인지 첨부파일 폼 데이터인지 구분하기
+		// TODO : canvas로 변환하기
+		// TODO : 리샘플링 수치에 따라 이미지 리사이즈 반복하기
+
 		// assign options
 		option = Object.assign({}, option, options);
 
+		console.log('action play');
+
+		if (typeof src === 'string') {
+			// image url
+		} else if ((typeof src === 'undefined' ? 'undefined' : _typeof(src)) === 'object') {
+			// input[type=file] form
+			console.log(src.files);
+		} else {
+			// TODO : error처리
+		}
+	};
+
+	/**
+  * Image source to canvas
+  * 이미지 주소로 캔버스로 변환
+  *
+  * @param {String} src
+  * @return {Promise}
+  */
+	this.srcToCanvas = function (src) {
 		// TODO : 이미지 url로 입력했을때 이미지를 가져와서 리사이즈를 하기
 		return new Promise(function (resolve, reject) {
 			loadImage(src).then(function (image) {
@@ -104,16 +248,16 @@ function ResizeImage(options) {
   * 첨부로 가져온 이미지를 캔버스로 변환
   *
   * @param {HTMLElement} element
-  * @param {Object} options
   * @return {Promise}
   */
-	this.formToCanvas = function (element, options) {
-		function error(e) {
-			console.log('error event');
-		}
-
+	this.formToCanvas = function (element) {
 		var canvas = null;
 		return new Promise(function (resolve, reject) {
+			function error(e) {
+				console.log('error event');
+				reject();
+			}
+
 			var reader = new FileReader();
 			reader.onload = function (e) {
 				var img = new Image();
