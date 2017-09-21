@@ -58,15 +58,29 @@ var base = {
 	quality: .75,
 	format: 'jpg', // png,jpg
 	width: 320,
-	height: 240,
+	height: null,
 	reSample: 2,
 	bgColor: '#ff0000',
 
+	// callbacks
 	callback_ready: function callback_ready() {
 		console.log('READY PLAY');
 	}
 
 };
+
+/**
+ * Resize image
+ *
+ * @param {Object} options
+ * @return {Promise}
+ */
+function resizeImage(options) {
+  return new Promise(function (resolve, reject) {
+
+    resolve('qweqweqwe');
+  });
+}
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -204,6 +218,7 @@ function ResizeImage(options) {
 
 	/**
   * Play convert
+  * 이미지 변환 실행
   * 이미지 주소로 캔버스로 변환 -> 캔버스를 리사이즈 -> 이미지로 컨버트
   *
   * @param {String|Object} src
@@ -214,7 +229,7 @@ function ResizeImage(options) {
 		var _this = this;
 
 		// TODO OK : src가 문자인지 첨부파일 폼 데이터인지 구분하기
-		// TODO : canvas로 변환하기
+		// TODO OK : canvas로 변환하기
 		// TODO : 리샘플링 수치에 따라 이미지 리사이즈 반복하기
 
 		// assign options
@@ -231,7 +246,7 @@ function ResizeImage(options) {
 				_this.srcToCanvas(src).then(function (canvas) {
 					return _this.resizeCanvas(canvas);
 				}).then(function (canvas) {
-					return _this.convert(canvas);
+					return _this.convertToImage(canvas);
 				}).then(function (result) {
 					return resolve(result);
 				}).catch(function (error) {
@@ -314,7 +329,27 @@ function ResizeImage(options) {
   */
 	this.resizeCanvas = function (canvas) {
 		return new Promise(function (resolve, reject) {
-			resolve(canvas);
+			// get size
+			var size = getSize(canvas.el.width, canvas.el.height, option.width, option.height);
+
+			resizeImage({
+				canvas: canvas,
+				reSample: option.reSample,
+				width: option.width,
+				height: option.height,
+				cx: 0,
+				cy: 0,
+				cw: canvas.el.width,
+				ch: canvas.el.height,
+				dx: 0,
+				dy: 0,
+				dw: size.width,
+				dh: size.height,
+				bgColor: option.bgColor
+			}).then(function (res) {
+				console.log('GOAL!!!');
+				resolve(canvas);
+			});
 		});
 	};
 
@@ -325,10 +360,45 @@ function ResizeImage(options) {
   * @param {Canvas} canvas
   * @return {*}
   */
-	this.convert = function (canvas) {
+	this.convertToImage = function (canvas) {
 		return new Promise(function (resolve, reject) {
 			resolve(canvas);
 		});
+	};
+}
+
+/**
+ * Get image size
+ *
+ * @param {Number} width original width
+ * @param {Number} height original height
+ * @param {Number} targetWidth target width
+ * @param {Number} targetHeight target height
+ * @return {Object}
+ */
+function getSize(width, height, targetWidth, targetHeight) {
+	var w = width;
+	var h = height;
+
+	if (targetWidth && targetHeight) {
+		if (targetWidth > targetHeight) {
+			targetHeight = null;
+		} else {
+			targetWidth = null;
+		}
+	}
+
+	if (targetWidth) {
+		w = targetWidth;
+		h = height * (targetWidth / width);
+	} else if (targetHeight) {
+		w = width * (targetHeight / height);
+		h = targetHeight;
+	}
+
+	return {
+		width: parseInt(w),
+		height: parseInt(h)
 	};
 }
 
