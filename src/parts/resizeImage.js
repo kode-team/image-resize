@@ -1,3 +1,67 @@
+import Canvas from '../parts/Canvas';
+
+
+// default options
+const defaultOptions = {
+	canvas: null,
+	reSample: 2,
+	width: 320,
+	height: 240,
+	cx: 0,
+	cy: 0,
+	cw: 0,
+	ch: 0,
+	dx: 0,
+	dy: 0,
+	dw: 0,
+	dh: 0,
+	bgColor: '#ffffff',
+};
+
+
+/**
+ * Resize canvas
+ *
+ * @param {Object} options
+ * @param {Number} count
+ * @param {Canvas} parentCanvas
+ * @return {Promise}
+ */
+function resize(options, count, parentCanvas)
+{
+	return new Promise(resolve => {
+		function func(count, parentCanvas)
+		{
+			const pow = Math.pow(2, count);
+			let canvasForResize = new Canvas(
+				options.width * pow,
+				options.height * pow,
+				options.bgColor
+			);
+
+			canvasForResize.ctx.drawImage(
+				parentCanvas.el,
+				0,
+				0,
+				parentCanvas.el.width * 0.5,
+				parentCanvas.el.height * 0.5,
+			);
+
+			if (count > 0)
+			{
+				func(count - 1, canvasForResize);
+			}
+			else
+			{
+				resolve(canvasForResize);
+			}
+		}
+
+		func(count - 1, parentCanvas);
+	});
+}
+
+
 /**
  * Resize image
  *
@@ -6,10 +70,48 @@
  */
 export default function resizeImage(options)
 {
-	return new Promise((resolve, reject) => {
+	// assign options
+	options = Object.assign({}, defaultOptions, options);
 
-		resolve('qweqweqwe');
+	// set resampling count
+	options.reSample = Math.min(4, options.reSample);
+	options.reSample = Math.max(0, options.reSample);
+	const reSamplingCount = Math.pow(2, options.reSample);
 
+	return new Promise(function(resolve, reject) {
+		try
+		{
+			const canvas = new Canvas(
+				options.width * reSamplingCount,
+				options.height * reSamplingCount,
+				options.bgColor
+			);
+
+			canvas.ctx.drawImage(
+				options.canvas.el,
+				options.cx,
+				options.cy,
+				options.cw,
+				options.ch,
+				options.dx * reSamplingCount,
+				options.dy * reSamplingCount,
+				options.dw * reSamplingCount,
+				options.dh * reSamplingCount
+			);
+
+			if (options.reSample > 0)
+			{
+				resize(options, options.reSample, canvas).then(resolve);
+			}
+			else
+			{
+				resolve(canvas);
+			}
+		}
+		catch(e)
+		{
+			reject(e);
+		}
 	});
 
 }

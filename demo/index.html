@@ -8,11 +8,94 @@
 </head>
 <body>
 <main>
-	<h1>resize image demo</h1>
-	<button type="button" id="play">play button</button>
+	<h1>Resize image demo</h1>
+
+	<article class="form">
+		<h1>Setting</h1>
+		<form action="#" method="post" id="form">
+			<div class="field-item">
+				<strong><label for="form_url">URL</label></strong>
+				<div class="field-item-full">
+					<input
+						type="text"
+						name="url"
+						id="form_url"
+						placeholder="http://url/image.jpg"
+						value="http://goose.redgoose.me/data/upload/original/201709/rg-20170905-000278.jpg"
+						class="input-text input-text-full"/>
+					<p>이미지 URL로 이미지 리사이즈 합니다.</p>
+				</div>
+			</div>
+			<div class="field-item">
+				<strong><label for="form_upload">Upload</label></strong>
+				<div>
+					<input type="file" name="upload" id="form_upload"/>
+					<p>선택한 이미지로 리사이즈 합니다. 이 폼에서 선택한 이미지가 우선으로 사용됩니다.</p>
+				</div>
+			</div>
+			<div class="field-item">
+				<strong>Size</strong>
+				<div>
+					<label class="field-item__label">
+						<span>Width:</span>
+						<input type="text" name="width" value="640" size="3" maxlength="4" class="input-text"/>
+					</label>
+					<label class="field-item__label">
+						<span>Height:</span>
+						<input type="text" name="height" value="0" size="3" maxlength="4" class="input-text"/>
+					</label>
+				</div>
+			</div>
+			<div class="field-item">
+				<strong><label for="form_format">Options</label></strong>
+				<div>
+					<label class="field-item__label">
+						<span>Format:</span>
+						<select name="format" id="form_format" class="input-select">
+							<option value="jpg">jpg</option>
+							<option value="png">png</option>
+						</select>
+					</label>
+					<label class="field-item__label">
+						<span>Quality:</span>
+						<input type="text" name="quality" id="form_quality" value=".75" size="5" class="input-text"/>
+					</label>
+					<label class="field-item__label">
+						<span>Output:</span>
+						<select name="outputType" id="form_output" class="input-select">
+							<option value="base64">base64</option>
+							<option value="canvas">canvas</option>
+							<option value="blob">blob</option>
+						</select>
+					</label>
+					<label class="field-item__label">
+						<span>Resampling count:</span>
+						<select name="reSample" id="form_reSample" class="input-select">
+							<option value="0">0</option>
+							<option value="1">1</option>
+							<option value="2" selected>2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+						</select>
+					</label>
+				</div>
+			</div>
+
+			<nav class="submit">
+				<button type="submit">PLAY</button>
+			</nav>
+		</form>
+	</article>
+
+	<section class="result">
+		<h1>Result</h1>
+		<figure id="result"></figure>
+	</section>
+
 </main>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js"></script>
 <script src="../dist/ResizeImage.js"></script>
-<script src="./index.js"></script>
+<script src="./demo.js"></script>
 </body>
 </html>
