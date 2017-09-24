@@ -1,11 +1,11 @@
 {
   "name": "image-resize",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Image resizer for javascript",
-  "main": "dist/ResizeImage.js",
+  "main": "index.js",
   "scripts": {
-    "watch": "rollup -c -w",
-    "build": "rollup -c -p"
+    "version-patch": "npm version patch",
+    "publish": "npm publish"
   },
   "repository": {
     "type": "git",
