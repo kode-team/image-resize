@@ -1,2 +1,4 @@
 /dist
 /demo
+.DS_Store
+.idea/
