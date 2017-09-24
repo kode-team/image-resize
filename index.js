@@ -1,4 +1,4 @@
-import ResizeImage from './dist/ResizeImage';
+import ResizeImage from './src/ResizeImage';
 
 
 export default ResizeImage;
