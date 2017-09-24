@@ -125,6 +125,41 @@ resizeImage.play(document.getElementById('upload'))
 	});
 ```
 
+### updateOptions
+
+객체에 정의되어있는 옵션을 변경한다.
+
+```
+resizeImage.updateOptions({
+	width: 800,
+	format: 'jpg',
+	quality: .5
+});
+```
+
+## Development
+
+이 도구를 직접 수저할 수 있다.  
+`/src`에 있는 소스를 수정하고 다음과 같이 cli 명령을 통하여 빌드할 수 있다.
+
+### Installed gulp
+```
+// build
+gulp build
+
+// watch
+gulp watch
+```
+
+### Not installed gulp
+```
+// build
+./node_modules/.bin/gulp build
+
+// watch
+./node_modules/.bin/gulp watch
+```
+
 
 ## Support browser
 
