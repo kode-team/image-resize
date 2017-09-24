@@ -8,7 +8,7 @@
 
 데모를 통하여 이미지 url, 이미지 첨부파일을 리사이즈하는 모습을 볼 수 확인할 수 있다.
 
-http://abccccc.com/abc.jpg
+https://redgoosedev.github.io/image-resize/
 
 
 ## Installation
