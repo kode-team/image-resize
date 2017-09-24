@@ -1,6 +1,6 @@
 {
   "name": "image-resize",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Image resizer for javascript",
   "main": "dist/ResizeImage.js",
   "scripts": {
