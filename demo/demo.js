@@ -32,7 +32,9 @@ $('#form').on('submit', function(e) {
 	}
 
 	resizeImage.updateOptions(values);
-	resizeImage.play(src).then(completeResizeImage);
+	resizeImage.play(src)
+		.then(completeResizeImage)
+		.catch(errorResizeImage);
 
 	return false;
 });
@@ -60,4 +62,10 @@ function completeResizeImage(response)
 			console.log('RESULT:', response);
 			break;
 	}
+}
+
+// error resize image
+function errorResizeImage(error)
+{
+	console.error('ERROR EVENT', error);
 }
