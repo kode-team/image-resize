@@ -24,7 +24,7 @@ const defaultOptions = {
  *
  * @param {Object} options
  * @param {Number} count
- * @param {Canvas} parentCanvas
+ * @param {HTMLCanvasElement} parentCanvas
  * @return {Promise}
  */
 function resize(options, count, parentCanvas)
@@ -40,20 +40,20 @@ function resize(options, count, parentCanvas)
 			);
 
 			canvasForResize.ctx.drawImage(
-				parentCanvas.el,
+				parentCanvas,
 				0,
 				0,
-				parentCanvas.el.width * 0.5,
-				parentCanvas.el.height * 0.5,
+				parentCanvas.width * 0.5,
+				parentCanvas.height * 0.5,
 			);
 
 			if (count > 0)
 			{
-				func(count - 1, canvasForResize);
+				func(count - 1, canvasForResize.el);
 			}
 			else
 			{
-				resolve(canvasForResize);
+				resolve(canvasForResize.el);
 			}
 		}
 
@@ -88,7 +88,7 @@ export default function resizeImage(options)
 			);
 
 			canvas.ctx.drawImage(
-				options.canvas.el,
+				options.canvas,
 				options.cx,
 				options.cy,
 				options.cw,
@@ -101,11 +101,11 @@ export default function resizeImage(options)
 
 			if (options.reSample > 0)
 			{
-				resize(options, options.reSample, canvas).then(resolve);
+				resize(options, options.reSample, canvas.el).then(resolve);
 			}
 			else
 			{
-				resolve(canvas);
+				resolve(canvas.el);
 			}
 		}
 		catch(e)

@@ -1,9 +1,5 @@
 // init ResizeImage
-var resizeImage = new ResizeImage({
-	callback_ready: function() {
-		console.warn('Ready:', resizeImage.options);
-	}
-});
+var resizeImage = new ResizeImage();
 
 
 // set submit event
@@ -31,14 +27,38 @@ $('#form').on('submit', function(e) {
 		return false;
 	}
 
-	resizeImage.updateOptions(values);
-	resizeImage.play(src)
+	resizeImage.updateOptions(values).play(src)
 		.then(completeResizeImage)
 		.catch(errorResizeImage);
+
+	/*
+	// Advanced play
+	resizeImage.updateOptions(values).get(src)
+		.then(function(canvas) {
+			return resizeImage.resize(canvas);
+		})
+		.then(function(canvas) {
+			return ready(canvas);
+		})
+		.then(function(canvas) {
+			return resizeImage.output(canvas);
+		})
+		.then(completeResizeImage)
+		.catch(errorResizeImage);
+	*/
 
 	return false;
 });
 
+
+// ready
+function ready(canvas)
+{
+	return new Promise(function(resolve) {
+		console.warn('Ready:', resizeImage.options);
+		resolve(canvas);
+	});
+}
 
 // complete resize image
 function completeResizeImage(response)

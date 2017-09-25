@@ -137,6 +137,31 @@ resizeImage.updateOptions({
 });
 ```
 
+다음과 같이 다른 메서드와 같이 묶어서 사용할 수 있다.
+
+```
+resizeImage
+	.updateOptions({ width: 400 })
+	.play('image.jpg')
+	.then();
+```
+
+### get
+
+이미지나 파일첨부폼을 이용해서 캔버스로 가져온다.  
+TODO : 작성예정...
+
+### resize
+
+리사이즈 실행하는 역할을 한다.
+TODO : 작성예정...
+
+### output
+
+결과물을 출력하는 역할을 한다.
+TODO : 작성예정...
+
+
 ## Development
 
 이 도구를 직접 수저할 수 있다.  

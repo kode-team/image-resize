@@ -8,12 +8,15 @@ import * as output from './parts/output';
 /**
  * Resize image
  *
- * @param {Object} options
+ * @param {Object} getOptions
  */
-function ResizeImage(options) {
+function ResizeImage(getOptions) {
+
+	let options = null;
 
 	// assign options
-	this.options = checkOptions(defaultOptions.base, options);
+	this.options = checkOptions(defaultOptions.base, getOptions);
+
 
 	/**
 	 * FUNCTION AREA
@@ -27,7 +30,7 @@ function ResizeImage(options) {
 	 */
 	function checkOptions(original={}, target={})
 	{
-		var result = {};
+		let result = {};
 
 		Object.keys(original).forEach(function(key) {
 			result[key] = target[key] || original[key];
@@ -46,10 +49,10 @@ function ResizeImage(options) {
 	 * 이미지 주소로 캔버스로 변환
 	 *
 	 * @param {String} src
-	 * @param {Object} option
+	 * @param {Object} options
 	 * @return {Promise}
 	 */
-	function srcToCanvas(src, option)
+	function srcToCanvas(src, options)
 	{
 		let canvas = null;
 		return new Promise(function(resolve, reject) {
@@ -57,9 +60,10 @@ function ResizeImage(options) {
 				// resolve
 				function(img)
 				{
-					canvas = new Canvas(img.width, img.height, option.bgColor);
+					// TODO : exif 데이터 가져오기
+					canvas = new Canvas(img.width, img.height, options.bgColor);
 					canvas.ctx.drawImage(img, 0, 0);
-					resolve(canvas);
+					resolve(canvas.el);
 				},
 				// reject
 				function(error)
@@ -75,16 +79,15 @@ function ResizeImage(options) {
 	 * 첨부로 가져온 이미지를 캔버스로 변환
 	 *
 	 * @param {HTMLElement} el
-	 * @param {Object} option
+	 * @param {Object} options
 	 * @return {Promise}
 	 */
-	function formToCanvas(el, option)
+	function formToCanvas(el, options)
 	{
 		let canvas = null;
 		return new Promise(function(resolve, reject) {
 			function error(e)
 			{
-				console.log('error event');
 				reject(e);
 			}
 
@@ -94,9 +97,10 @@ function ResizeImage(options) {
 				const img = new Image();
 				img.onload = function()
 				{
-					canvas = new Canvas(img.width, img.height, option.bgColor);
+					// TODO : exif 데이터 가져오기
+					canvas = new Canvas(img.width, img.height, options.bgColor);
 					canvas.ctx.drawImage(img, 0, 0);
-					resolve(canvas);
+					resolve(canvas.el);
 				};
 				img.onerror = error;
 				img.src = e.target.result;
@@ -106,71 +110,6 @@ function ResizeImage(options) {
 		});
 	}
 
-	/**
-	 * Resize canvas
-	 *
-	 * @param {Canvas} canvas
-	 * @param {Object} option
-	 * @return {Promise}
-	 */
-	function resizeCanvas(canvas, option)
-	{
-		return new Promise((resolve, reject) => {
-			// get size
-			let size = getSize(canvas.el.width, canvas.el.height, option.width, option.height);
-
-			// resize image
-			resizeImage({
-				canvas: canvas,
-				reSample: option.reSample,
-				width: size.width,
-				height: size.height,
-				cx: 0,
-				cy: 0,
-				cw: canvas.el.width,
-				ch: canvas.el.height,
-				dx: 0,
-				dy: 0,
-				dw: size.width,
-				dh: size.height,
-				bgColor: option.bgColor,
-			})
-				.then(resolve)
-				.catch(reject);
-		});
-	}
-
-	/**
-	 * Convert to image
-	 * 이미지 데이터로 변환
-	 *
-	 * @param {Canvas} canvas
-	 * @param {Object} option
-	 * @return {*}
-	 */
-	function convertToImage(canvas, option)
-	{
-		return new Promise((resolve, reject) => {
-
-			switch (option.outputType)
-			{
-				case 'base64':
-					output.base64(canvas.el, option.format, option.quality)
-						.then(resolve)
-						.catch(reject);
-					break;
-				case 'blob':
-					output.blob(canvas.el, option.format, option.quality)
-						.then(resolve)
-						.catch(reject);
-					break;
-				case 'canvas':
-				default:
-					resolve(canvas.el);
-					break;
-			}
-		});
-	}
 
 	/**
 	 * METHOD AREA
@@ -186,30 +125,36 @@ function ResizeImage(options) {
 	 */
 	this.play = function(src)
 	{
-		// fire ready callback function
-		if (this.options.callback_ready)
-		{
-			this.options.callback_ready();
-		}
+		return new Promise((resolve, reject) => {
+			this.get(src)
+				.then((canvas) => this.resize(canvas))
+				.then((canvas) => this.output(canvas))
+				.then((result) => resolve(result))
+				.catch((error) => reject(error));
+		});
+	};
+
+	/**
+	 * Get source
+	 *
+	 * @param {String|HTMLElement} src
+	 * @param {Object} options
+	 * @return {Promise}
+	 */
+	this.get = function(src, options)
+	{
+		options = options ? checkOptions(this.options, options) : this.options;
 
 		return new Promise((resolve, reject) => {
 			if (typeof src === 'string')
 			{
 				// image url
-				srcToCanvas(src, this.options)
-					.then((canvas) => resizeCanvas(canvas, this.options))
-					.then((canvas) => convertToImage(canvas, this.options))
-					.then((result) => resolve(result))
-					.catch((error) => reject(error));
+				resolve(srcToCanvas(src, options));
 			}
 			else if (typeof src === 'object')
 			{
 				// input[type=file] form
-				formToCanvas(src, this.options)
-					.then((canvas) => resizeCanvas(canvas, this.options))
-					.then((canvas) => convertToImage(canvas, this.options))
-					.then((result) => resolve(result))
-					.catch((error) => reject(error));
+				resolve(formToCanvas(src, options));
 			}
 			else
 			{
@@ -219,13 +164,83 @@ function ResizeImage(options) {
 	};
 
 	/**
+	 * Resize canvas
+	 *
+	 * @param {HTMLCanvasElement} canvas
+	 * @param {Object} options
+	 * @return {Promise}
+	 */
+	this.resize = function(canvas, options)
+	{
+		options = options ? checkOptions(this.options, options) : this.options;
+
+		return new Promise((resolve, reject) => {
+			// get size
+			let size = getSize(canvas.width, canvas.height, options.width, options.height);
+
+			// resize image
+			resizeImage({
+				canvas: canvas,
+				reSample: options.reSample,
+				width: size.width,
+				height: size.height,
+				cx: 0,
+				cy: 0,
+				cw: canvas.width,
+				ch: canvas.height,
+				dx: 0,
+				dy: 0,
+				dw: size.width,
+				dh: size.height,
+				bgColor: options.bgColor,
+			})
+				.then(resolve)
+				.catch(reject);
+		});
+	};
+
+	/**
+	 * Output data
+	 *
+	 * @param {HTMLCanvasElement} canvas
+	 * @param {Object} options
+	 * @return {Promise}
+	 */
+	this.output = function(canvas, options)
+	{
+		options = !!options ? checkOptions(this.options, options) : this.options;
+
+		return new Promise((resolve, reject) => {
+			switch (options.outputType)
+			{
+				case 'base64':
+					output.base64(canvas, options.format, options.quality)
+						.then(resolve)
+						.catch(reject);
+					break;
+				case 'blob':
+					output.blob(canvas, options.format, options.quality)
+						.then(resolve)
+						.catch(reject);
+					break;
+				case 'canvas':
+				default:
+					resolve(canvas);
+					break;
+			}
+		});
+	};
+
+	/**
 	 * Update options
 	 *
-	 * @param {Object} options
+	 * @param {Object} value
+	 * @return {ResizeImage}
 	 */
-	this.updateOptions = function(options)
+	this.updateOptions = function(value)
 	{
-		this.options = checkOptions(this.options, options);
+		this.options = checkOptions(this.options, value);
+		return this;
 	}
 }
 

@@ -7,8 +7,6 @@ export const base = {
 	height: null,
 	reSample: 2,
 	bgColor: '#ffffff',
-
-	// callbacks
-	callback_ready: function () { console.log('READY PLAY'); },
+	saveExif: false,
 
 };
