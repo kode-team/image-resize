@@ -31,7 +31,8 @@ yarn add image-resize
 먼저 	`ImageResize` 객체를 만들어서 `play()`메서드를 실행하는 방식이다.
 
 ### Module environment
-```
+
+```javascript
 import ResizeImage from 'image-resize';
 
 var resizeImage = new ResizeImage({
@@ -42,7 +43,8 @@ resizeImage.play('image.jpg');
 ```
 
 ### Vanilla environment
-```
+
+```html
 <script src="ResizeImage.js"></script>
 
 <script>
@@ -80,7 +82,7 @@ resizeImage.play('image.jpg');
 
 만들어진 인스턴스 객체에서 액션을 실행하는 메서드가 제공된다. 메서드를 사용하기 위하여 다음과 같이 인스턴스 객체를 만들었다.
 
-```
+```javascript
 var resizeImage = new ResizeImage();
 ```
 
@@ -92,11 +94,11 @@ https://github.com/RedgooseDev/image-resize/blob/master/demo/demo.js
 
 실질적으로 리사이즈를 실행한다.
 
-#### image url
+- Param `String, HTMLInputElement`
+- Return `String, Object, HTMLCanvasElement`
 
-이미지 url에서 가져오기
-
-```
+```javascript
+// image url
 resizeImage.play('http://address.com/image.jpg')
 	.then(function(responses) {
 		console.log(response);
@@ -104,18 +106,8 @@ resizeImage.play('http://address.com/image.jpg')
 	.catch(function(error) {
 		console.error(error);
 	});
-```
 
-#### upload form
-
-파일첨부로 올린 이미지를 가져오기
-
-##### html
-```
-<input type="file" id="upload"/>
-```
-##### javascript
-```
+// <input type="file" id="upload"/>
 resizeImage.play(document.getElementById('upload'))
 	.then(function(response) {
 		console.log(response);
@@ -127,9 +119,12 @@ resizeImage.play(document.getElementById('upload'))
 
 ### updateOptions
 
-객체에 정의되어있는 옵션을 변경한다.
+정의되어있는 객체의 옵션을 변경한다.
 
-```
+- Param `Object`
+- Return `ResizeImage`
+
+```javascript
 resizeImage.updateOptions({
 	width: 800,
 	format: 'jpg',
@@ -139,7 +134,7 @@ resizeImage.updateOptions({
 
 다음과 같이 다른 메서드와 같이 묶어서 사용할 수 있다.
 
-```
+```javascript
 resizeImage
 	.updateOptions({ width: 400 })
 	.play('image.jpg')
@@ -148,18 +143,67 @@ resizeImage
 
 ### get
 
-이미지나 파일첨부폼을 이용해서 캔버스로 가져온다.  
-TODO : 작성예정...
+이미지나 파일첨부폼을 이용해서 캔버스로 가져온다.
+
+- Param `String, HTMLInputElement`
+- Return `HTMLCanvasElement`
+
+```javascript
+// image url
+resizeImage.get('image.jpg').then();
+
+// <input type="file" id="upload"/>
+resizeImage.get(document.getElementById('upload')).then();
+```
 
 ### resize
 
 리사이즈 실행하는 역할을 한다.
-TODO : 작성예정...
+
+- Param `HTMLCanvasElement`
+- Return `HTMLCanvasElement`
+
+```javascript
+resizeImage.resize(document.getElementById('canvas')).then();
+```
 
 ### output
 
 결과물을 출력하는 역할을 한다.
-TODO : 작성예정...
+
+- Param `HTMLCanvasElement`
+- Return `String, Object, HTMLCanvasElement`
+
+```javascript
+resizeImage.output(document.getElementById('canvas')).then();
+```
+
+
+## Mix methods
+
+메서드들이 `Promise`로 리턴되기 때문에 다음과 같이 연결해서 사용할 수 있다.  
+체인 형식이다보니 중간에 다른 함수를 끼워넣어서 사용할 수 있다.
+
+```javascript
+var resizeImage = new ResizeImage();
+
+resizeImage.updateOptions({ width: 640 }).get('image.jpg')
+	.then(function(canvas) {
+		return resizeImage.resize(canvas);
+	})
+	.then(function(canvas) {
+		return ready(canvas);
+	})
+	.then(function(canvas) {
+		return resizeImage.output(canvas);
+	})
+	.then(function(result) {
+		console.log(result);
+	})
+	.catch(function(error) {
+		console.error(error);
+	});
+```
 
 
 ## Development
