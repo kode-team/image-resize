@@ -9,7 +9,6 @@
     "build": "webpack --mode production",
     "postbuild": "mkdir dist && cp docs/ResizeImage.js dist",
     "version-patch": "npm version patch",
-    "publish": "npm publish",
     "docs": "node_modules/.bin/http-server ./docs -s -p 3000"
   },
   "repository": {
