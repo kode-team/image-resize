@@ -1,5 +1,4 @@
 export const base = {
-
 	quality: .75,
 	format: 'jpg', // png,jpg
 	outputType: 'base64', // base64, canvas, blob
@@ -8,5 +7,4 @@ export const base = {
 	reSample: 2,
 	bgColor: '#ffffff',
 	saveExif: false,
-
 };

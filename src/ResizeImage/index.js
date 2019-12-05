@@ -1,18 +1,15 @@
 import Canvas from './parts/Canvas';
 import * as events from './parts/events';
-import * as defaultOptions from './parts/defaultOptions';
+import * as defaultOptions from './defaultOptions';
 import resizeImage from './parts/resizeImage';
 import * as output from './parts/output';
-
 
 /**
  * Resize image
  *
- * @param {Object} getOptions
+ * @param {object} getOptions
  */
-function ResizeImage(getOptions) {
-
-	let options = null;
+function ResizeImage(getOptions={}) {
 
 	// assign options
 	this.options = checkOptions(defaultOptions.base, getOptions);
@@ -25,8 +22,8 @@ function ResizeImage(getOptions) {
 	/**
 	 * Check options
 	 *
-	 * @param {Object} original
-	 * @param {Object} target
+	 * @param {object} original
+	 * @param {object} target
 	 */
 	function checkOptions(original={}, target={})
 	{
@@ -48,9 +45,9 @@ function ResizeImage(getOptions) {
 	 * Image source to canvas
 	 * 이미지 주소로 캔버스로 변환
 	 *
-	 * @param {String} src
-	 * @param {Object} options
-	 * @return {Promise}
+	 * @param {string} src
+	 * @param {object} options
+	 * @return {promise}
 	 */
 	function srcToCanvas(src, options)
 	{
@@ -137,13 +134,13 @@ function ResizeImage(getOptions) {
 	/**
 	 * Get source
 	 *
-	 * @param {String|HTMLElement} src
-	 * @param {Object} options
-	 * @return {Promise}
+	 * @param {string|HTMLElement} src
+	 * @param {object} options
+	 * @return {promise}
 	 */
-	this.get = function(src, options)
+	this.get = function(src, options=null)
 	{
-		options = options ? checkOptions(this.options, options) : this.options;
+		options = !!options ? checkOptions(this.options, options) : this.options;
 
 		return new Promise((resolve, reject) => {
 			if (typeof src === 'string')
@@ -167,12 +164,12 @@ function ResizeImage(getOptions) {
 	 * Resize canvas
 	 *
 	 * @param {HTMLCanvasElement} canvas
-	 * @param {Object} options
-	 * @return {Promise}
+	 * @param {object} options
+	 * @return {promise}
 	 */
-	this.resize = function(canvas, options)
+	this.resize = function(canvas, options=null)
 	{
-		options = options ? checkOptions(this.options, options) : this.options;
+		options = !!options ? checkOptions(this.options, options) : this.options;
 
 		return new Promise((resolve, reject) => {
 			// get size
@@ -203,10 +200,10 @@ function ResizeImage(getOptions) {
 	 * Output data
 	 *
 	 * @param {HTMLCanvasElement} canvas
-	 * @param {Object} options
-	 * @return {Promise}
+	 * @param {object} options
+	 * @return {promise}
 	 */
-	this.output = function(canvas, options)
+	this.output = function(canvas, options=null)
 	{
 		options = !!options ? checkOptions(this.options, options) : this.options;
 
@@ -234,7 +231,7 @@ function ResizeImage(getOptions) {
 	/**
 	 * Update options
 	 *
-	 * @param {Object} value
+	 * @param {object} value
 	 * @return {ResizeImage}
 	 */
 	this.updateOptions = function(value)
@@ -244,15 +241,14 @@ function ResizeImage(getOptions) {
 	}
 }
 
-
 /**
  * Get image size
  *
- * @param {Number} width original width
- * @param {Number} height original height
- * @param {Number} targetWidth target width
- * @param {Number} targetHeight target height
- * @return {Object}
+ * @param {number} width original width
+ * @param {number} height original height
+ * @param {number} targetWidth target width
+ * @param {number} targetHeight target height
+ * @return {object}
  */
 function getSize(width, height, targetWidth, targetHeight)
 {
@@ -287,6 +283,5 @@ function getSize(width, height, targetWidth, targetHeight)
 		height: parseInt(h)
 	};
 }
-
 
 export default ResizeImage;

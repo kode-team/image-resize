@@ -1,20 +1,25 @@
 {
   "name": "image-resize",
-  "version": "1.0.10",
-  "description": "Image resizer for javascript",
-  "main": "index.js",
+  "version": "1.1.0",
+  "description": "Image resize for javascript",
+  "main": "src/index.js",
   "scripts": {
+    "dev": "webpack-dev-server --mode development --port 3000",
+    "prebuild": "rm -rf dist && rm -rf docs",
+    "build": "webpack --mode production",
+    "postbuild": "mkdir dist && cp docs/ResizeImage.js dist",
     "version-patch": "npm version patch",
-    "publish": "npm publish"
+    "publish": "npm publish",
+    "docs": "node_modules/.bin/http-server ./docs -s -p 3000"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RedgooseDev/image-resize.git"
+    "url": "git+https://github.com/redgoose-dev/image-resize.git"
   },
   "keywords": [
     "image",
     "resize",
-    "resizer",
+    "resize-image",
     "canvas",
     "javascript",
     "js"
@@ -22,22 +27,29 @@
   "author": {
     "name": "redgoose",
     "email": "scripter@me.com",
-    "url": "http://redgoose.me"
+    "url": "https://redgoose.me"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/RedgooseDev/image-resize/issues"
+    "url": "https://github.com/redgoose-dev/image-resize/issues"
   },
-  "homepage": "https://github.com/RedgooseDev/image-resize#readme",
-  "dependencies": {},
+  "homepage": "https://github.com/redgoose-dev/image-resize",
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-es2015": "^6.24.1",
-    "gulp": "^3.9.1",
-    "rollup": "^0.50.0",
-    "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-node-globals": "^1.1.0",
-    "rollup-plugin-uglify": "^2.0.1"
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.1",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "http-server": "^0.12.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "terser-webpack-plugin": "^2.2.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "dependencies": {
+    "jquery": "^3.4.1"
   }
 }

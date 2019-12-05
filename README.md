@@ -28,7 +28,7 @@ yarn add image-resize
 
 ## Usage
 
-먼저 	`ImageResize` 객체를 만들어서 `play()`메서드를 실행하는 방식이다.
+먼저 `ImageResize` 객체를 만들어서 `play()`메서드를 실행하는 방식이다.
 
 ### Module environment
 
@@ -36,8 +36,8 @@ yarn add image-resize
 import ResizeImage from 'image-resize';
 
 var resizeImage = new ResizeImage({
-	format: 'png',
-	width: 640
+  format: 'png',
+  width: 640
 });
 resizeImage.play('image.jpg');
 ```
@@ -49,8 +49,8 @@ resizeImage.play('image.jpg');
 
 <script>
 var resizeImage = new ResizeImage({
-	format: 'png',
-	width: 640
+  format: 'png',
+  width: 640
 });
 resizeImage.play('image.jpg');
 </script>
@@ -100,21 +100,21 @@ https://github.com/redgoose-dev/image-resize/blob/master/demo/demo.js
 ```javascript
 // image url
 resizeImage.play('http://address.com/image.jpg')
-	.then(function(responses) {
-		console.log(response);
-	})
-	.catch(function(error) {
-		console.error(error);
-	});
+  .then(function(responses) {
+    console.log(response);
+  })
+  .catch(function(error) {
+    console.error(error);
+  });
 
 // <input type="file" id="upload"/>
 resizeImage.play(document.getElementById('upload'))
-	.then(function(response) {
-		console.log(response);
-	})
-	.catch(function(error) {
-		console.error(error);
-	});
+  .then(function(response) {
+    console.log(response);
+  })
+  .catch(function(error) {
+    console.error(error);
+  });
 ```
 
 ### updateOptions
@@ -126,9 +126,9 @@ resizeImage.play(document.getElementById('upload'))
 
 ```javascript
 resizeImage.updateOptions({
-	width: 800,
-	format: 'jpg',
-	quality: .5
+  width: 800,
+  format: 'jpg',
+  quality: .5
 });
 ```
 
@@ -136,9 +136,9 @@ resizeImage.updateOptions({
 
 ```javascript
 resizeImage
-	.updateOptions({ width: 400 })
-	.play('image.jpg')
-	.then();
+  .updateOptions({ width: 400 })
+  .play('image.jpg')
+  .then();
 ```
 
 ### get
@@ -188,45 +188,38 @@ resizeImage.output(document.getElementById('canvas')).then();
 var resizeImage = new ResizeImage();
 
 resizeImage.updateOptions({ width: 640 }).get('image.jpg')
-	.then(function(canvas) {
-		return resizeImage.resize(canvas);
-	})
-	.then(function(canvas) {
-		return ready(canvas);
-	})
-	.then(function(canvas) {
-		return resizeImage.output(canvas);
-	})
-	.then(function(result) {
-		console.log(result);
-	})
-	.catch(function(error) {
-		console.error(error);
-	});
+  .then(function(canvas) {
+    return resizeImage.resize(canvas);
+  })
+  .then(function(canvas) {
+    return ready(canvas);
+  })
+  .then(function(canvas) {
+    return resizeImage.output(canvas);
+  })
+  .then(function(result) {
+    console.log(result);
+  })
+  .catch(function(error) {
+    console.error(error);
+  });
 ```
 
 
 ## Development
 
-이 도구를 직접 수저할 수 있다.  
+이 도구를 직접 수정할 수 있다.  
 `/src`에 있는 소스를 수정하고 다음과 같이 cli 명령을 통하여 빌드할 수 있다.
 
-### Installed gulp
 ```
-// build
-gulp build
+// development
+yarn run dev
 
-// watch
-gulp watch
-```
+// production
+yarn run build
 
-### Not installed gulp
-```
-// build
-./node_modules/.bin/gulp build
-
-// watch
-./node_modules/.bin/gulp watch
+// preview docs
+yarn run docs
 ```
 
 
