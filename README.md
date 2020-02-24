@@ -33,26 +33,26 @@ yarn add image-resize
 ### Module environment
 
 ```javascript
-import ResizeImage from 'image-resize';
+import ImageResize from 'image-resize';
 
-var resizeImage = new ResizeImage({
+var imageResize = new ImageResize({
   format: 'png',
   width: 640
 });
-resizeImage.play('image.jpg');
+imageResize.play('image.jpg');
 ```
 
 ### Vanilla environment
 
 ```html
-<script src="ResizeImage.js"></script>
+<script src="ImageResize.js"></script>
 
 <script>
-var resizeImage = new ResizeImage({
+var imageResize = new ImageResize({
   format: 'png',
   width: 640
 });
-resizeImage.play('image.jpg');
+imageResize.play('image.jpg');
 </script>
 ```
 
@@ -83,7 +83,7 @@ resizeImage.play('image.jpg');
 만들어진 인스턴스 객체에서 액션을 실행하는 메서드가 제공된다. 메서드를 사용하기 위하여 다음과 같이 인스턴스 객체를 만들었다.
 
 ```javascript
-var resizeImage = new ResizeImage();
+var imageResize = new ImageResize();
 ```
 
 좀더 자세하게 사용하는 방법에 대해서는 데모 소스를 참고.  
@@ -99,7 +99,7 @@ https://github.com/redgoose-dev/image-resize/blob/master/demo/demo.js
 
 ```javascript
 // image url
-resizeImage.play('http://address.com/image.jpg')
+imageResize.play('http://address.com/image.jpg')
   .then(function(responses) {
     console.log(response);
   })
@@ -108,7 +108,7 @@ resizeImage.play('http://address.com/image.jpg')
   });
 
 // <input type="file" id="upload"/>
-resizeImage.play(document.getElementById('upload'))
+imageResize.play(document.getElementById('upload'))
   .then(function(response) {
     console.log(response);
   })
@@ -122,10 +122,10 @@ resizeImage.play(document.getElementById('upload'))
 정의되어있는 객체의 옵션을 변경한다.
 
 - Param `Object`
-- Return `ResizeImage`
+- Return `ImageResize`
 
 ```javascript
-resizeImage.updateOptions({
+imageResize.updateOptions({
   width: 800,
   format: 'jpg',
   quality: .5
@@ -135,7 +135,7 @@ resizeImage.updateOptions({
 다음과 같이 다른 메서드와 같이 묶어서 사용할 수 있다.
 
 ```javascript
-resizeImage
+imageResize
   .updateOptions({ width: 400 })
   .play('image.jpg')
   .then();
@@ -150,10 +150,10 @@ resizeImage
 
 ```javascript
 // image url
-resizeImage.get('image.jpg').then();
+imageResize.get('image.jpg').then();
 
 // <input type="file" id="upload"/>
-resizeImage.get(document.getElementById('upload')).then();
+imageResize.get(document.getElementById('upload')).then();
 ```
 
 ### resize
@@ -164,7 +164,7 @@ resizeImage.get(document.getElementById('upload')).then();
 - Return `HTMLCanvasElement`
 
 ```javascript
-resizeImage.resize(document.getElementById('canvas')).then();
+imageResize.resize(document.getElementById('canvas')).then();
 ```
 
 ### output
@@ -175,7 +175,7 @@ resizeImage.resize(document.getElementById('canvas')).then();
 - Return `String, Object, HTMLCanvasElement`
 
 ```javascript
-resizeImage.output(document.getElementById('canvas')).then();
+imageResize.output(document.getElementById('canvas')).then();
 ```
 
 
@@ -185,17 +185,17 @@ resizeImage.output(document.getElementById('canvas')).then();
 체인 형식이다보니 중간에 다른 함수를 끼워넣어서 사용할 수 있다.
 
 ```javascript
-var resizeImage = new ResizeImage();
+var imageResize = new ImageResize();
 
-resizeImage.updateOptions({ width: 640 }).get('image.jpg')
+imageResize.updateOptions({ width: 640 }).get('image.jpg')
   .then(function(canvas) {
-    return resizeImage.resize(canvas);
+    return imageResize.resize(canvas);
   })
   .then(function(canvas) {
     return ready(canvas);
   })
   .then(function(canvas) {
-    return resizeImage.output(canvas);
+    return imageResize.output(canvas);
   })
   .then(function(result) {
     console.log(result);
