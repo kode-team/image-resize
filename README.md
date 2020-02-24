@@ -87,7 +87,7 @@ var imageResize = new ImageResize();
 ```
 
 좀더 자세하게 사용하는 방법에 대해서는 데모 소스를 참고.  
-https://github.com/redgoose-dev/image-resize/blob/master/demo/demo.js
+https://github.com/redgoose-dev/image-resize/blob/master/src/demo/index.js
 
 
 ### play
