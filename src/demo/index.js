@@ -1,14 +1,13 @@
 import $ from 'jquery/dist/jquery.slim.min';
-import ResizeImage from '../ResizeImage';
+import ImageResize from '../ImageResize';
 
 import './index.css';
 
-const resizeImage = new ResizeImage();
+const imageResize = new ImageResize();
 
 
 // set submit event
 $('#form').on('submit', function(e) {
-
   let values = {};
   const $forms = $(this).find('[name]');
   let src = null;
@@ -31,20 +30,20 @@ $('#form').on('submit', function(e) {
     return false;
   }
 
-  resizeImage.updateOptions(values).play(src)
+  imageResize.updateOptions(values).play(src)
     .then(completeResizeImage)
     .catch(errorResizeImage);
 
   // Advanced play
-  resizeImage.updateOptions(values).get(src)
+  imageResize.updateOptions(values).get(src)
     .then(function(canvas) {
-      return resizeImage.resize(canvas);
+      return imageResize.resize(canvas);
     })
     .then(function(canvas) {
       return ready(canvas);
     })
     .then(function(canvas) {
-      return resizeImage.output(canvas);
+      return imageResize.output(canvas);
     })
     .then(completeResizeImage)
     .catch(errorResizeImage);
@@ -56,7 +55,7 @@ $('#form').on('submit', function(e) {
 function ready(canvas)
 {
   return new Promise(function(resolve) {
-    console.warn('Ready:', resizeImage.options);
+    console.warn('Ready:', imageResize.options);
     resolve(canvas);
   });
 }
@@ -68,7 +67,7 @@ function completeResizeImage(response)
 
   $result.empty();
 
-  switch(resizeImage.options.outputType)
+  switch(imageResize.options.outputType)
   {
     case 'base64':
       const image = new Image();

@@ -5,11 +5,11 @@ import resizeImage from './parts/resizeImage';
 import * as output from './parts/output';
 
 /**
- * Resize image
+ * Image Resize
  *
  * @param {object} getOptions
  */
-function ResizeImage(getOptions={}) {
+function ImageResize(getOptions={}) {
 
 	// assign options
 	this.options = checkOptions(defaultOptions.base, getOptions);
@@ -232,7 +232,7 @@ function ResizeImage(getOptions={}) {
 	 * Update options
 	 *
 	 * @param {object} value
-	 * @return {ResizeImage}
+	 * @return {ImageResize}
 	 */
 	this.updateOptions = function(value)
 	{
@@ -284,4 +284,4 @@ function getSize(width, height, targetWidth, targetHeight)
 	};
 }
 
-export default ResizeImage;
+export default ImageResize;

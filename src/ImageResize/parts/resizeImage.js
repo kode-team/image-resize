@@ -1,6 +1,5 @@
 import Canvas from '../parts/Canvas';
 
-
 // default options
 const defaultOptions = {
 	canvas: null,

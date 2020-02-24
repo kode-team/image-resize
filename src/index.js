@@ -1,4 +1,4 @@
-import ResizeImage from './ResizeImage';
+import ImageResize from './ImageResize';
 
-export default ResizeImage;
-module.export = ResizeImage;
+export default ImageResize;
+module.export = ImageResize;

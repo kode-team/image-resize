@@ -79,7 +79,7 @@ const base = (env, options) => {
      * Production mode
      */
     result.entry = {
-      ResizeImage: './src/ResizeImage/index.js',
+      ImageResize: './src/ImageResize/index.js',
       app: './src/demo/index.js',
     };
     result.output = {
