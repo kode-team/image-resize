@@ -8,13 +8,14 @@ const config = defineConfig(({ mode }) => {
   return {
     root: './src/demo',
     base: './',
+    publicDir: path + '/public',
     server: {
       host: env.VITE_HOST,
       port: Number(env.VITE_PORT),
       open: env.VITE_OPEN_BROWSER === 'true',
     },
     build: {
-      outDir: path + `/docs`,
+      outDir: path + '/docs',
       assetsDir: '',
     },
     preview: {

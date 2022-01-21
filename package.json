@@ -1,6 +1,6 @@
 {
   "name": "image-resize",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Resize image for javascript",
   "files": [
     "libs"
@@ -46,12 +46,10 @@
     "> 1%",
     "last 2 versions"
   ],
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^17.0.10",
     "typescript": "^4.5.5",
     "vite": "^2.7.13"
-  },
-  "dependencies": {
-    "next": "^12.0.8"
   }
 }
