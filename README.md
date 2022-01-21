@@ -67,7 +67,7 @@ imageResize.play('image.jpg');
 |:----:|:----:|:-------:|:------------|
 | quality | Number | `.75` | jpg 이미지일때의 이미지 퀄리티값 |
 | format | String | `jpg` | 출력할 포맷. `png,jpg` |
-| outputType | String | `base64 ` | 출력방식. `base64|canvas|blob` |
+| outputType | String | `base64 ` | 출력방식. `base64,canvas,blob` |
 | width | Number | `320` | 조절할 가로사이즈 |
 | height | Number | `null` | 조절할 세로 사이즈. 한쪽값이 있는쪽으로 기준이 되어 조절한다. |
 | reSample | Number | `2` | 리새플링 횟수. 수치가 높을수록 경계선이 부드러워지지만 처리속도는 느려진다. 최대 4까지 적용된다. |
