@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserJSPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -65,9 +64,7 @@ const base = (env, options) => {
       hot: true,
       host: '0.0.0.0',
       port: options.port || 3000,
-      stats: { color: true },
       historyApiFallback: true,
-      noInfo: true,
     };
     result.plugins.push(new HtmlWebpackPlugin({
       template: './src/demo/index.html',
