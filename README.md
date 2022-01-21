@@ -13,7 +13,7 @@ https://redgoose-dev.github.io/image-resize/
 
 ## Installation
 
-CLI에서 설치할 프로젝트에서 다음과 같은 명령을 실행한다.
+`CLI`에서 설치할 프로젝트에서 다음과 같은 명령을 실행한다.
 
 ### npm
 ```
@@ -45,7 +45,7 @@ imageResize.play('image.jpg');
 ### Vanilla environment
 
 ```html
-<script src="ImageResize.js"></script>
+<script src="./ImageResize.umd.js"></script>
 
 <script>
 var imageResize = new ImageResize({
@@ -62,6 +62,7 @@ imageResize.play('image.jpg');
 `image-resize`에서 다음과 같은 옵션을 사용하여 컨트롤할 수 있다.
 
 ### Basic
+
 | Name | Type | Default | Description |
 |:----:|:----:|:-------:|:------------|
 | quality | Number | `.75` | jpg 이미지일때의 이미지 퀄리티값 |
@@ -73,6 +74,7 @@ imageResize.play('image.jpg');
 | bgColor | String | `#ffffff` | 캔버스 배경색 |
 
 ### Callbacks
+
 | Name | Type | Description |
 |:----:|:----:|:------------|
 | callback_ready | Function | `play()`메서드가 실행할때 실행되는 콜백함수 |
@@ -218,8 +220,8 @@ yarn run dev
 // production
 yarn run build
 
-// preview docs
-yarn run docs
+// preview
+yarn run start
 ```
 
 

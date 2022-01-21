@@ -15,6 +15,7 @@ main > h1 {
   width: 100%; padding: 12px 20px;
   border: none; background: #7752ff;
   color: #fff; font-size: 14px; font-weight: 600;
+  cursor: pointer;
 }
 @media (max-width: 640px) {
   .form {padding: 20px 15px;}

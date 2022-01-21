@@ -1,15 +1,24 @@
 {
   "name": "image-resize",
-  "version": "1.1.5",
-  "description": "Image resize for javascript",
-  "main": "src/index.js",
+  "version": "1.2.0",
+  "description": "Resize image for javascript",
+  "files": [
+    "libs"
+  ],
+  "main": "libs/ImageResize.umd.js",
+  "module": "libs/ImageResize.es.js",
+  "exports": {
+    ".": {
+      "import": "./libs/ImageResize.es.js",
+      "require": "./libs/ImageResize.umd.js"
+    }
+  },
+  "type": "module",
   "scripts": {
-    "dev": "webpack-dev-server --mode development --port 3000",
-    "prebuild": "rm -rf dist && rm -rf docs",
-    "build": "webpack --mode production",
-    "postbuild": "mkdir dist && cp docs/ImageResize.js dist",
-    "version-patch": "npm version patch",
-    "docs": "node_modules/.bin/http-server ./docs -s -p 3000"
+    "dev": "vite --config vite.config/vite.docs.ts",
+    "prebuild": "rm -rf ./docs && rm -rf ./libs",
+    "build": "vite build --config vite.config/vite.docs.ts && vite build --config vite.config/vite.libs.ts",
+    "start": "vite preview --config vite.config/vite.docs.ts"
   },
   "repository": {
     "type": "git",
@@ -33,22 +42,16 @@
     "url": "https://github.com/redgoose-dev/image-resize/issues"
   },
   "homepage": "https://github.com/redgoose-dev/image-resize",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ],
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/preset-env": "^7.8.4",
-    "babel-loader": "^8.0.6",
-    "css-loader": "^3.4.2",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
-    "http-server": "^0.12.1",
-    "mini-css-extract-plugin": "^0.9.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "terser-webpack-plugin": "^2.3.5",
-    "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "@types/node": "^17.0.10",
+    "typescript": "^4.5.5",
+    "vite": "^2.7.13"
   },
   "dependencies": {
-    "jquery": "^3.4.1"
+    "next": "^12.0.8"
   }
 }

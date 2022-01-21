@@ -1,8 +1,8 @@
-import Canvas from './parts/Canvas';
-import * as events from './parts/events';
+import Canvas from './libs/Canvas';
+import * as events from './libs/events';
 import * as defaultOptions from './defaultOptions';
-import resizeImage from './parts/resizeImage';
-import * as output from './parts/output';
+import resizeImage from './libs/resizeImage';
+import * as output from './libs/output';
 
 /**
  * Image Resize

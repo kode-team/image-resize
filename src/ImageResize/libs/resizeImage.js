@@ -1,4 +1,4 @@
-import Canvas from '../parts/Canvas';
+import Canvas from './Canvas';
 
 // default options
 const defaultOptions = {
