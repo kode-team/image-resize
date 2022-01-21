@@ -8,7 +8,7 @@ const config = defineConfig(() => {
       minify: true,
       outDir: 'libs',
       lib: {
-        entry: 'src/exports.js',
+        entry: 'src/ImageResize/index.js',
         name: projectName,
         formats: [ 'es', 'umd' ],
         fileName: (format) => `${projectName}.${format}.js`

@@ -261,5 +261,4 @@ function getSize(width, height, targetWidth, targetHeight) {
     height: parseInt(h)
   };
 }
-module.export = ImageResize;
 export { ImageResize as default };
