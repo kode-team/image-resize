@@ -1,14 +1,24 @@
 {
   "name": "image-resize",
-  "version": "1.1.5",
-  "description": "Image resize for javascript",
-  "main": "src/index.js",
+  "version": "1.2.0",
+  "description": "Resize image for javascript",
+  "files": [
+    "libs"
+  ],
+  "main": "libs/ImageResize.umd.js",
+  "module": "libs/ImageResize.es.js",
+  "exports": {
+    ".": {
+      "import": "./libs/ImageResize.es.js",
+      "require": "./libs/ImageResize.umd.js"
+    }
+  },
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "prebuild": "rm -rf ./dist",
-    "build": "vite build",
-    "start": "vite preview"
+    "dev": "vite --config vite.config/vite.docs.ts",
+    "prebuild": "rm -rf ./docs && rm -rf ./libs",
+    "build": "vite build --config vite.config/vite.docs.ts && vite build --config vite.config/vite.libs.ts",
+    "start": "vite preview --config vite.config/vite.docs.ts"
   },
   "repository": {
     "type": "git",
@@ -36,10 +46,12 @@
     "> 1%",
     "last 2 versions"
   ],
-  "dependencies": {},
   "devDependencies": {
     "@types/node": "^17.0.10",
     "typescript": "^4.5.5",
     "vite": "^2.7.13"
+  },
+  "dependencies": {
+    "next": "^12.0.8"
   }
 }

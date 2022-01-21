@@ -1,24 +1,46 @@
-import $ from 'jquery/dist/jquery.slim.min';
 import ImageResize from '../ImageResize';
-
 import './index.css';
 
 const imageResize = new ImageResize();
+const $form = document.getElementById('form');
+const $result = document.getElementById('result');
+const values = new Proxy({}, {
+  get: (obj, name) => (obj[name]),
+  set: (obj, prop, value) => {
+    switch (prop)
+    {
+      case 'width':
+      case 'height':
+      case 'quality':
+      case 'reSample':
+        value = Number(value);
+        break;
+    }
+    obj[prop] = value;
+    return true;
+  },
+});
 
+/**
+ * functions
+ */
 
-// set submit event
-$('#form').on('submit', function(e) {
-  let values = {};
-  const $forms = $(this).find('[name]');
-  let src = null;
+function onSubmitForm(e)
+{
+  e.preventDefault();
 
-  $forms.each(function(index, item) {
-    values[item.getAttribute('name')] = item.value || null;
-  });
-
+  // set values
+  const $self = e.target;
+  const $fields = $self.querySelectorAll('[name]');
+  for (const $item of $fields)
+  {
+    values[$item.name] = $item.value;
+  }
+  // set source
+  let src;
   if (values.upload)
   {
-    src = $(this).find('[name=upload]').get(0);
+    src = $self.querySelector('[name=upload]');
   }
   else if (values.url)
   {
@@ -30,11 +52,15 @@ $('#form').on('submit', function(e) {
     return false;
   }
 
-  imageResize.updateOptions(values).play(src)
-    .then(completeResizeImage)
-    .catch(errorResizeImage);
+  // empty result
+  $result.innerHTML = '';
 
-  // Advanced play
+  // processing
+  // imageResize.updateOptions(values).play(src)
+  //   .then(completeResizeImage)
+  //   .catch(errorResizeImage);
+
+  // advanced processing
   imageResize.updateOptions(values).get(src)
     .then(function(canvas) {
       return imageResize.resize(canvas);
@@ -47,9 +73,7 @@ $('#form').on('submit', function(e) {
     })
     .then(completeResizeImage)
     .catch(errorResizeImage);
-
-  return false;
-});
+}
 
 // ready
 function ready(canvas)
@@ -60,36 +84,30 @@ function ready(canvas)
   });
 }
 
-// complete resize image
-function completeResizeImage(response)
+function completeResizeImage(res)
 {
-  const $result = $('#result');
-
-  $result.empty();
-
   switch(imageResize.options.outputType)
   {
     case 'base64':
       const image = new Image();
-      image.src = response;
-      $result.append(image);
+      image.src = res;
+      $result.appendChild(image);
       break;
     case 'canvas':
-      $result.append(response);
+      $result.appendChild(res);
       break;
     case 'blob':
     default:
-      console.log('RESULT:', response);
+      console.log('RESULT:', res);
       break;
   }
 }
 
-/**
- * error resize image
- *
- * @param {event} error
- */
-function errorResizeImage(error)
+function errorResizeImage(e)
 {
-  console.error('ERROR EVENT', error);
+  console.error('ERROR EVENT', e);
+  alert(`Error resize: ${e.message}`);
 }
+
+// action
+$form.addEventListener('submit', onSubmitForm);

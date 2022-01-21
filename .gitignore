@@ -4,4 +4,4 @@ node_modules/
 .idea/
 .env.local
 yarn.lock
-package.lock.json
+package-lock.json
