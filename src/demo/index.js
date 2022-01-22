@@ -1,4 +1,5 @@
 import ImageResize from '../ImageResize';
+import { sleep } from './libs';
 import './index.css';
 
 const imageResize = new ImageResize();
@@ -21,11 +22,14 @@ const values = new Proxy({}, {
   },
 });
 
+// TODO: 테스트용으로 잠시 사용중.. 나중에 삭제하기
+console.log('imageResize', imageResize);
+
 /**
  * functions
  */
 
-function onSubmitForm(e)
+async function onSubmitForm(e)
 {
   e.preventDefault();
 
@@ -40,7 +44,9 @@ function onSubmitForm(e)
   let src;
   if (values.upload)
   {
-    src = $self.querySelector('[name=upload]');
+    src = $self.querySelector('[name=upload]'); // set element
+    src = src.files[0]; // set File
+    src = new Blob([src], { type: src.type }); // set Blob
   }
   else if (values.url)
   {
@@ -55,33 +61,31 @@ function onSubmitForm(e)
   // empty result
   $result.innerHTML = '';
 
-  // processing
-  // imageResize.updateOptions(values).play(src)
-  //   .then(completeResizeImage)
-  //   .catch(errorResizeImage);
+  try
+  {
+    // basic resize
+    let res = await imageResize.updateOptions(values).play(src);
+    completeResizeImage(res);
 
-  // advanced processing
-  imageResize.updateOptions(values).get(src)
-    .then(function(canvas) {
-      return imageResize.resize(canvas);
-    })
-    .then(function(canvas) {
-      return ready(canvas);
-    })
-    .then(function(canvas) {
-      return imageResize.output(canvas);
-    })
-    .then(completeResizeImage)
-    .catch(errorResizeImage);
+    // advanced resize
+    // let res = await imageResize.updateOptions(values).get(src);
+    // res = await imageResize.resize(res);
+    // res = await ready(res);
+    // res = await imageResize.output(res);
+    // completeResizeImage(res);
+  }
+  catch(e)
+  {
+    errorResizeImage(e);
+  }
 }
 
 // ready
-function ready(canvas)
+async function ready(canvas)
 {
-  return new Promise(function(resolve) {
-    console.warn('Ready:', imageResize.options);
-    resolve(canvas);
-  });
+  await sleep(1000);
+  console.warn('ready:', imageResize.options);
+  return canvas;
 }
 
 function completeResizeImage(res)

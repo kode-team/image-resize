@@ -1,7 +1,7 @@
 # image-resize
 
 개인적으로 마음에 드는 이미지 리사이즈 도구를 못찾아서 이렇게 만들게 되었다.  
-이 도구는 웹 브라우저에서 사용하는 `Canvas`엘리먼트를 사용하여 이미지 리사이즈 한다.
+이 도구는 웹 브라우저에서 사용하는 `<Canvas/>`엘리먼트를 사용하여 이미지 리사이즈 한다.
 
 
 ## Demo
@@ -63,21 +63,15 @@ imageResize.play('image.jpg');
 
 ### Basic
 
-| Name | Type | Default | Description |
-|:----:|:----:|:-------:|:------------|
-| quality | Number | `.75` | jpg 이미지일때의 이미지 퀄리티값 |
-| format | String | `jpg` | 출력할 포맷. `png,jpg` |
-| outputType | String | `base64 ` | 출력방식. `base64,canvas,blob` |
-| width | Number | `320` | 조절할 가로사이즈 |
-| height | Number | `null` | 조절할 세로 사이즈. 한쪽값이 있는쪽으로 기준이 되어 조절한다. |
-| reSample | Number | `2` | 리새플링 횟수. 수치가 높을수록 경계선이 부드러워지지만 처리속도는 느려진다. 최대 4까지 적용된다. |
-| bgColor | String | `#ffffff` | 캔버스 배경색 |
-
-### Callbacks
-
-| Name | Type | Description |
-|:----:|:----:|:------------|
-| callback_ready | Function | `play()`메서드가 실행할때 실행되는 콜백함수 |
+| Name |  Type  | Default | Description |
+|:----:|:------:|:-------:|:------------|
+| quality | number | `.75` | jpg 이미지일때의 이미지 퀄리티값 |
+| format | string | `jpg` | 출력할 포맷. `png,jpg` |
+| outputType | string | `base64 ` | 출력방식. `base64,canvas,blob` |
+| width | number | `320` | 조절할 가로사이즈 |
+| height | number | `null` | 조절할 세로 사이즈. 한쪽값이 있는쪽으로 기준이 되어 조절한다. |
+| reSample | number | `2` | 리새플링 횟수. 수치가 높을수록 경계선이 부드러워지지만 처리속도는 느려진다. 최대 4까지 적용된다. |
+| bgColor | string | `#ffffff` | 캔버스 배경색 |
 
 
 ## Methods
@@ -89,34 +83,33 @@ var imageResize = new ImageResize();
 ```
 
 좀더 자세하게 사용하는 방법에 대해서는 데모 소스를 참고.  
-https://github.com/redgoose-dev/image-resize/blob/master/src/demo/index.js
+https://github.com/redgoose-dev/image-resize/blob/main/src/demo/index.js
 
 
 ### play
 
 실질적으로 리사이즈를 실행한다.
 
-- Param `String, HTMLInputElement`
-- Return `String, Object, HTMLCanvasElement`
+- Param `String,HTMLInputElement,File,Blob`
+- Return `string,object,HTMLCanvasElement`
 
 ```javascript
 // image url
-imageResize.play('http://address.com/image.jpg')
-  .then(function(responses) {
-    console.log(response);
-  })
-  .catch(function(error) {
-    console.error(error);
-  });
+try {
+  let res = await imageResize.play('image.jpg')
+  console.log(res);
+} catch (e) {
+  console.error(e);
+}
 
 // <input type="file" id="upload"/>
-imageResize.play(document.getElementById('upload'))
-  .then(function(response) {
-    console.log(response);
-  })
-  .catch(function(error) {
-    console.error(error);
-  });
+let res = await imageResize.play(document.getElementById('upload'));
+
+// File
+let res = await imageResize.play(element.files[0]);
+
+// Blob
+let res = await imageResize.play(new Blob(src, { type: 'image/jpeg' }));
 ```
 
 ### updateOptions
@@ -141,13 +134,17 @@ imageResize
   .updateOptions({ width: 400 })
   .play('image.jpg')
   .then();
+
+let res = await imageResize
+  .updateOptions({ width: 400 })
+  .play('image.jpg');
 ```
 
 ### get
 
 이미지나 파일첨부폼을 이용해서 캔버스로 가져온다.
 
-- Param `String, HTMLInputElement`
+- Param `string,HTMLInputElement,File,Blob`
 - Return `HTMLCanvasElement`
 
 ```javascript
@@ -155,7 +152,7 @@ imageResize
 imageResize.get('image.jpg').then();
 
 // <input type="file" id="upload"/>
-imageResize.get(document.getElementById('upload')).then();
+let res = await imageResize.get(document.getElementById('upload'));
 ```
 
 ### resize
@@ -174,7 +171,7 @@ imageResize.resize(document.getElementById('canvas')).then();
 결과물을 출력하는 역할을 한다.
 
 - Param `HTMLCanvasElement`
-- Return `String, Object, HTMLCanvasElement`
+- Return `string,object,HTMLCanvasElement`
 
 ```javascript
 imageResize.output(document.getElementById('canvas')).then();
@@ -187,24 +184,16 @@ imageResize.output(document.getElementById('canvas')).then();
 체인 형식이다보니 중간에 다른 함수를 끼워넣어서 사용할 수 있다.
 
 ```javascript
-var imageResize = new ImageResize();
-
-imageResize.updateOptions({ width: 640 }).get('image.jpg')
-  .then(function(canvas) {
-    return imageResize.resize(canvas);
-  })
-  .then(function(canvas) {
-    return ready(canvas);
-  })
-  .then(function(canvas) {
-    return imageResize.output(canvas);
-  })
-  .then(function(result) {
-    console.log(result);
-  })
-  .catch(function(error) {
-    console.error(error);
-  });
+try {
+  const imageResize = new ImageResize();
+  let res = await imageResize.updateOptions({ width: 640 }).get('image.jpg');
+  res = await imageResize.resize(canvas);
+  res = await ready(res);
+  res = await imageResize.output(canvas);
+  console.log(res);
+} catch (e) {
+  console.error(error);
+}
 ```
 
 
@@ -228,4 +217,4 @@ yarn run start
 ## Support browser
 
 - Google chrome
-- Safari
+- Safari (문제가 생길 수 있습니다.)

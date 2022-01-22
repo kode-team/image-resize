@@ -108,12 +108,12 @@ function blob(canvas, format = "image/jpeg", quality = 0.75) {
 function getFormat(str) {
   let format = null;
   switch (str) {
-    case "jpg":
-    case "jpeg":
-      format = "image/jpeg";
+    case 'jpg:
+    case 'jpeg:
+      format = 'image/jpeg';
       break;
-    case "png":
-      format = "image/png";
+    case 'png:
+      format = 'image/png';
       break;
     default:
       format = str;
@@ -122,11 +122,12 @@ function getFormat(str) {
   return format;
 }
 function dataURItoBlob(dataURI) {
-  const byteString = atob(dataURI.split(",")[1]);
-  const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+  const byteString = atob(dataURI.split(',')[1]);
+  const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
   const arrayBuffer = new ArrayBuffer(byteString.length);
   let _ia = new Uint8Array(arrayBuffer);
-  for (let i = 0; i < byteString.length; i++) {
+  for (let i = 0; i < byteString.length; i++)
+  {
     _ia[i] = byteString.charCodeAt(i);
   }
   const dataView = new DataView(arrayBuffer);

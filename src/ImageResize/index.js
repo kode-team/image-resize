@@ -1,244 +1,199 @@
 import Canvas from './libs/Canvas';
-import * as events from './libs/events';
 import * as defaultOptions from './defaultOptions';
 import resizeImage from './libs/resizeImage';
 import * as output from './libs/output';
+import { fileReader, imageLoader } from './libs/loaders';
 
 /**
  * Image Resize
  *
  * @param {object} getOptions
  */
-function ImageResize(getOptions={}) {
+function ImageResize(getOptions = {}) {
 
-	// assign options
-	this.options = checkOptions(defaultOptions.base, getOptions);
-
-
-	/**
-	 * FUNCTION AREA
-	 */
-
-	/**
-	 * Check options
-	 *
-	 * @param {object} original
-	 * @param {object} target
-	 */
-	function checkOptions(original={}, target={})
-	{
-		let result = {};
-
-		Object.keys(original).forEach(function(key) {
-			result[key] = target[key] || original[key];
-		});
-
-		result.width = Number(result.width);
-		result.height = Number(result.height);
-		result.quality = Number(result.quality);
-		result.reSample = Number(result.reSample);
-
-		return result;
-	}
-
-	/**
-	 * Image source to canvas
-	 * 이미지 주소로 캔버스로 변환
-	 *
-	 * @param {string} src
-	 * @param {object} options
-	 * @return {promise}
-	 */
-	function srcToCanvas(src, options)
-	{
-		let canvas = null;
-		return new Promise(function(resolve, reject) {
-			events.loadImage(src).then(
-				// resolve
-				function(img)
-				{
-					// TODO : exif 데이터 가져오기
-					canvas = new Canvas(img.width, img.height, options.bgColor);
-					canvas.ctx.drawImage(img, 0, 0);
-					resolve(canvas.el);
-				},
-				// reject
-				function(error)
-				{
-					reject(error);
-				}
-			);
-		});
-	}
-
-	/**
-	 * Upload to image
-	 * 첨부로 가져온 이미지를 캔버스로 변환
-	 *
-	 * @param {HTMLElement} el
-	 * @param {Object} options
-	 * @return {Promise}
-	 */
-	function formToCanvas(el, options)
-	{
-		let canvas = null;
-		return new Promise(function(resolve, reject) {
-			function error(e)
-			{
-				reject(e);
-			}
-
-			const reader = new FileReader();
-			reader.onload = function(e)
-			{
-				const img = new Image();
-				img.onload = function()
-				{
-					// TODO : exif 데이터 가져오기
-					canvas = new Canvas(img.width, img.height, options.bgColor);
-					canvas.ctx.drawImage(img, 0, 0);
-					resolve(canvas.el);
-				};
-				img.onerror = error;
-				img.src = e.target.result;
-			};
-			reader.onerror = error;
-			reader.readAsDataURL(el.files[0]);
-		});
-	}
+  // assign options
+  this.options = checkOptions(defaultOptions.base, getOptions);
 
 
-	/**
-	 * METHOD AREA
-	 */
+  /**
+   * FUNCTION AREA
+   */
 
-	/**
-	 * Play convert
-	 * 이미지 변환 실행
-	 * 이미지 주소로 캔버스로 변환 -> 캔버스를 리사이즈 -> 이미지로 컨버트
-	 *
-	 * @param {String|HTMLElement} src
-	 * @return {Promise}
-	 */
-	this.play = function(src)
-	{
-		return new Promise((resolve, reject) => {
-			this.get(src)
-				.then((canvas) => this.resize(canvas))
-				.then((canvas) => this.output(canvas))
-				.then((result) => resolve(result))
-				.catch((error) => reject(error));
-		});
-	};
+  /**
+   * Check options
+   *
+   * @param {object} original
+   * @param {object} target
+   */
+  function checkOptions(original = {}, target={})
+  {
+    let result = {};
+    Object.keys(original).forEach((key) => {
+      result[key] = target[key] || original[key];
+    });
+    result.width = Number(result.width);
+    result.height = Number(result.height);
+    result.quality = Number(result.quality);
+    result.reSample = Number(result.reSample);
+    return result;
+  }
 
-	/**
-	 * Get source
-	 *
-	 * @param {string|HTMLElement} src
-	 * @param {object} options
-	 * @return {promise}
-	 */
-	this.get = function(src, options=null)
-	{
-		options = !!options ? checkOptions(this.options, options) : this.options;
+  /**
+   * url to canvas
+   * 이미지 주소로 캔버스로 변환
+   *
+   * @param {string} src
+   * @param {object} options
+   * @return {Promise}
+   */
+  async function urlToCanvas(src, options)
+  {
+    let canvas;
+    const img = await imageLoader(src);
+    canvas = new Canvas(img.width, img.height, options.bgColor);
+    canvas.ctx.drawImage(img, 0, 0);
+    return canvas.el;
+  }
 
-		return new Promise((resolve, reject) => {
-			if (typeof src === 'string')
-			{
-				// image url
-				resolve(srcToCanvas(src, options));
-			}
-			else if (typeof src === 'object')
-			{
-				// input[type=file] form
-				resolve(formToCanvas(src, options));
-			}
-			else
-			{
-				reject(new Error('Not found source'));
-			}
-		});
-	};
+  /**
+   * file to canvas
+   * `File`객체를 캔버스로 변환
+   *
+   * @param {File|Blob} file
+   * @param {Object} options
+   * @return {Promise<HTMLCanvasElement>}
+   */
+  async function fileToCanvas(file, options)
+  {
+    const resource = await fileReader(file);
+    const image = await imageLoader(resource);
+    let canvas = new Canvas(image.width, image.height, options.bgColor);
+    canvas.ctx.drawImage(image, 0, 0);
+    return canvas.el;
+  }
 
-	/**
-	 * Resize canvas
-	 *
-	 * @param {HTMLCanvasElement} canvas
-	 * @param {object} options
-	 * @return {promise}
-	 */
-	this.resize = function(canvas, options=null)
-	{
-		options = !!options ? checkOptions(this.options, options) : this.options;
 
-		return new Promise((resolve, reject) => {
-			// get size
-			let size = getSize(canvas.width, canvas.height, options.width, options.height);
+  /**
+   * METHOD AREA
+   */
 
-			// resize image
-			resizeImage({
-				canvas: canvas,
-				reSample: options.reSample,
-				width: size.width,
-				height: size.height,
-				cx: 0,
-				cy: 0,
-				cw: canvas.width,
-				ch: canvas.height,
-				dx: 0,
-				dy: 0,
-				dw: size.width,
-				dh: size.height,
-				bgColor: options.bgColor,
-			})
-				.then(resolve)
-				.catch(reject);
-		});
-	};
+  /**
+   * Play convert
+   * 이미지 변환 실행
+   * 이미지 주소로 캔버스로 변환 -> 캔버스를 리사이즈 -> 이미지로 컨버트
+   *
+   * @param {string|HTMLInputElement|File|Blob} src
+   * @return {Promise<string>}
+   */
+  this.play = async (src) => {
+    let res = await this.get(src);
+    res = await this.resize(res);
+    res = await this.resize(res);
+    res = await this.output(res);
+    return res;
+  };
 
-	/**
-	 * Output data
-	 *
-	 * @param {HTMLCanvasElement} canvas
-	 * @param {object} options
-	 * @return {promise}
-	 */
-	this.output = function(canvas, options=null)
-	{
-		options = !!options ? checkOptions(this.options, options) : this.options;
+  /**
+   * Get source
+   *
+   * @param {string|HTMLInputElement|File|Blob} src
+   * @param {object} options
+   * @return {Promise<HTMLCanvasElement>}
+   */
+  this.get = async function(src, options = null)
+  {
+    options = !!options ? checkOptions(this.options, options) : this.options;
+    // console.log('this.get()', src);
+    if (typeof src === 'string')
+    {
+      // image url address
+      return await urlToCanvas(src, options);
+    }
+    else if (src instanceof File || src instanceof Blob)
+    {
+      // File,Blob
+      return await fileToCanvas(src, options);
+    }
+    else if (src.tagName?.toLowerCase() === 'input' && src.type === 'file')
+    {
+      // element`<input type="file"/>`
+      return await fileToCanvas(src.files[0], options);
+    }
+    // error
+    throw new Error('Not found source');
+  };
 
-		return new Promise((resolve, reject) => {
-			switch (options.outputType)
-			{
-				case 'base64':
-					output.base64(canvas, options.format, options.quality)
-						.then(resolve)
-						.catch(reject);
-					break;
-				case 'blob':
-					output.blob(canvas, options.format, options.quality)
-						.then(resolve)
-						.catch(reject);
-					break;
-				case 'canvas':
-				default:
-					resolve(canvas);
-					break;
-			}
-		});
-	};
+  /**
+   * Resize canvas
+   *
+   * @param {HTMLCanvasElement} canvas
+   * @param {object} options
+   * @return {Promise<HTMLCanvasElement>}
+   */
+  this.resize = async (canvas, options) => {
+    options = !!options ? checkOptions(this.options, options) : this.options;
+    // get size
+    let size = getSize(canvas.width, canvas.height, options.width, options.height);
+    // resize image
+    return await resizeImage({
+      canvas: canvas,
+      reSample: options.reSample,
+      width: size.width,
+      height: size.height,
+      cx: 0,
+      cy: 0,
+      cw: canvas.width,
+      ch: canvas.height,
+      dx: 0,
+      dy: 0,
+      dw: size.width,
+      dh: size.height,
+      bgColor: options.bgColor,
+    });
+  };
 
-	/**
-	 * Update options
-	 *
-	 * @param {object} value
-	 * @return {ImageResize}
-	 */
-	this.updateOptions = function(value)
-	{
-		this.options = checkOptions(this.options, value);
-		return this;
-	}
+  /**
+   * Output data
+   *
+   * @param {HTMLCanvasElement} canvas
+   * @param {object} options
+   * @return {Promise}
+   */
+  this.output = function(canvas, options)
+  {
+    options = !!options ? checkOptions(this.options, options) : this.options;
+    return new Promise((resolve, reject) => {
+      switch (options.outputType)
+      {
+        case 'base64':
+          output.base64(canvas, options.format, options.quality)
+            .then(resolve)
+            .catch(reject);
+          break;
+        case 'blob':
+          output.blob(canvas, options.format, options.quality)
+            .then(resolve)
+            .catch(reject);
+          break;
+        case 'canvas':
+        default:
+          resolve(canvas);
+          break;
+      }
+    });
+  };
+
+  /**
+   * Update options
+   *
+   * @param {object} value
+   * @return {ImageResize}
+   */
+  this.updateOptions = function(value)
+  {
+    this.options = checkOptions(this.options, value);
+    return this;
+  }
 }
 
 /**
@@ -252,36 +207,30 @@ function ImageResize(getOptions={}) {
  */
 function getSize(width, height, targetWidth, targetHeight)
 {
-	let w = width;
-	let h = height;
+  let w = width;
+  let h = height;
 
-	if (targetWidth && targetHeight)
-	{
-		if (targetWidth > targetHeight)
-		{
-			targetHeight = null;
-		}
-		else
-		{
-			targetWidth = null;
-		}
-	}
+  if (targetWidth && targetHeight)
+  {
+    if (targetWidth > targetHeight) targetHeight = undefined;
+    else targetWidth = undefined;
+  }
 
-	if (targetWidth)
-	{
-		w = targetWidth;
-		h = height * (targetWidth / width);
-	}
-	else if (targetHeight)
-	{
-		w = width * (targetHeight / height);
-		h = targetHeight;
-	}
+  if (targetWidth)
+  {
+    w = targetWidth;
+    h = height * (targetWidth / width);
+  }
+  else if (targetHeight)
+  {
+    w = width * (targetHeight / height);
+    h = targetHeight;
+  }
 
-	return {
-		width: parseInt(w),
-		height: parseInt(h)
-	};
+  return {
+    width: Number(w),
+    height: Number(h),
+  };
 }
 
 export default ImageResize;
