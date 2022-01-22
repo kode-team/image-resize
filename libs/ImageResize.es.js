@@ -6,23 +6,6 @@ function Canvas(width = 320, height = 240, bgColor = "#ffffff") {
   this.ctx.fillStyle = bgColor;
   this.ctx.fillRect(0, 0, width, height);
 }
-function loadImage(src) {
-  return new Promise((resolve, reject) => {
-    if (src) {
-      let image = new Image();
-      image.onload = function(e) {
-        resolve(image);
-      };
-      image.onerror = function(e) {
-        reject(e);
-      };
-      image.setAttribute("crossOrigin", "anonymous");
-      image.src = src;
-    } else {
-      reject(new Error("no src"));
-    }
-  });
-}
 const base = {
   quality: 0.75,
   format: "jpg",
@@ -106,14 +89,14 @@ function blob(canvas, format = "image/jpeg", quality = 0.75) {
   });
 }
 function getFormat(str) {
-  let format = null;
+  let format;
   switch (str) {
-    case 'jpg:
-    case 'jpeg:
-      format = 'image/jpeg';
+    case "jpg":
+    case "jpeg":
+      format = "image/jpeg";
       break;
-    case 'png:
-      format = 'image/png';
+    case "png":
+      format = "image/png";
       break;
     default:
       format = str;
@@ -122,23 +105,43 @@ function getFormat(str) {
   return format;
 }
 function dataURItoBlob(dataURI) {
-  const byteString = atob(dataURI.split(',')[1]);
-  const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+  const byteString = atob(dataURI.split(",")[1]);
+  const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
   const arrayBuffer = new ArrayBuffer(byteString.length);
   let _ia = new Uint8Array(arrayBuffer);
-  for (let i = 0; i < byteString.length; i++)
-  {
+  for (let i = 0; i < byteString.length; i++) {
     _ia[i] = byteString.charCodeAt(i);
   }
   const dataView = new DataView(arrayBuffer);
   const blob2 = new Blob([dataView], { type: mimeString });
   return blob2;
 }
+function fileReader(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      var _a;
+      return resolve((_a = e.target) == null ? void 0 : _a.result);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function imageLoader(src) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = src;
+    image.crossOrigin = "anonymous";
+    image.alt = "";
+  });
+}
 function ImageResize(getOptions = {}) {
   this.options = checkOptions(base, getOptions);
   function checkOptions(original = {}, target = {}) {
     let result = {};
-    Object.keys(original).forEach(function(key) {
+    Object.keys(original).forEach((key) => {
       result[key] = target[key] || original[key];
     });
     result.width = Number(result.width);
@@ -147,78 +150,59 @@ function ImageResize(getOptions = {}) {
     result.reSample = Number(result.reSample);
     return result;
   }
-  function srcToCanvas(src, options) {
-    let canvas = null;
-    return new Promise(function(resolve, reject) {
-      loadImage(src).then(function(img) {
-        canvas = new Canvas(img.width, img.height, options.bgColor);
-        canvas.ctx.drawImage(img, 0, 0);
-        resolve(canvas.el);
-      }, function(error) {
-        reject(error);
-      });
-    });
+  async function urlToCanvas(src, options) {
+    let canvas;
+    const img = await imageLoader(src);
+    canvas = new Canvas(img.width, img.height, options.bgColor);
+    canvas.ctx.drawImage(img, 0, 0);
+    return canvas.el;
   }
-  function formToCanvas(el, options) {
-    let canvas = null;
-    return new Promise(function(resolve, reject) {
-      function error(e) {
-        reject(e);
-      }
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          canvas = new Canvas(img.width, img.height, options.bgColor);
-          canvas.ctx.drawImage(img, 0, 0);
-          resolve(canvas.el);
-        };
-        img.onerror = error;
-        img.src = e.target.result;
-      };
-      reader.onerror = error;
-      reader.readAsDataURL(el.files[0]);
-    });
+  async function fileToCanvas(file, options) {
+    const resource = await fileReader(file);
+    const image = await imageLoader(resource);
+    let canvas = new Canvas(image.width, image.height, options.bgColor);
+    canvas.ctx.drawImage(image, 0, 0);
+    return canvas.el;
   }
-  this.play = function(src) {
-    return new Promise((resolve, reject) => {
-      this.get(src).then((canvas) => this.resize(canvas)).then((canvas) => this.output(canvas)).then((result) => resolve(result)).catch((error) => reject(error));
-    });
+  this.play = async (src) => {
+    let res = await this.get(src);
+    res = await this.resize(res);
+    res = await this.resize(res);
+    res = await this.output(res);
+    return res;
   };
-  this.get = function(src, options = null) {
+  this.get = async function(src, options = null) {
+    var _a;
     options = !!options ? checkOptions(this.options, options) : this.options;
-    return new Promise((resolve, reject) => {
-      if (typeof src === "string") {
-        resolve(srcToCanvas(src, options));
-      } else if (typeof src === "object") {
-        resolve(formToCanvas(src, options));
-      } else {
-        reject(new Error("Not found source"));
-      }
-    });
+    if (typeof src === "string") {
+      return await urlToCanvas(src, options);
+    } else if (src instanceof File || src instanceof Blob) {
+      return await fileToCanvas(src, options);
+    } else if (((_a = src.tagName) == null ? void 0 : _a.toLowerCase()) === "input" && src.type === "file") {
+      return await fileToCanvas(src.files[0], options);
+    }
+    throw new Error("Not found source");
   };
-  this.resize = function(canvas, options = null) {
+  this.resize = async (canvas, options) => {
     options = !!options ? checkOptions(this.options, options) : this.options;
-    return new Promise((resolve, reject) => {
-      let size = getSize(canvas.width, canvas.height, options.width, options.height);
-      resizeImage({
-        canvas,
-        reSample: options.reSample,
-        width: size.width,
-        height: size.height,
-        cx: 0,
-        cy: 0,
-        cw: canvas.width,
-        ch: canvas.height,
-        dx: 0,
-        dy: 0,
-        dw: size.width,
-        dh: size.height,
-        bgColor: options.bgColor
-      }).then(resolve).catch(reject);
+    let size = getSize(canvas.width, canvas.height, options.width, options.height);
+    return await resizeImage({
+      canvas,
+      reSample: options.reSample,
+      width: size.width,
+      height: size.height,
+      cx: 0,
+      cy: 0,
+      cw: canvas.width,
+      ch: canvas.height,
+      dx: 0,
+      dy: 0,
+      dw: size.width,
+      dh: size.height,
+      bgColor: options.bgColor
     });
   };
-  this.output = function(canvas, options = null) {
+  this.output = function(canvas, options) {
     options = !!options ? checkOptions(this.options, options) : this.options;
     return new Promise((resolve, reject) => {
       switch (options.outputType) {
@@ -244,11 +228,10 @@ function getSize(width, height, targetWidth, targetHeight) {
   let w = width;
   let h = height;
   if (targetWidth && targetHeight) {
-    if (targetWidth > targetHeight) {
-      targetHeight = null;
-    } else {
-      targetWidth = null;
-    }
+    if (targetWidth > targetHeight)
+      targetHeight = void 0;
+    else
+      targetWidth = void 0;
   }
   if (targetWidth) {
     w = targetWidth;
@@ -258,8 +241,8 @@ function getSize(width, height, targetWidth, targetHeight) {
     h = targetHeight;
   }
   return {
-    width: parseInt(w),
-    height: parseInt(h)
+    width: Number(w),
+    height: Number(h)
   };
 }
 export { ImageResize as default };
