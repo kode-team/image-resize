@@ -99,28 +99,19 @@ class ImageResize {
    * @param {object} options
    * @return {Promise}
    */
-  output (canvas, options = undefined)
+  async output (canvas, options = undefined)
   {
     options = !!options ? checkOptions(this.options, options) : this.options;
-    return new Promise((resolve, reject) => {
-      switch (options.outputType)
-      {
-        case 'base64':
-          output.base64(canvas, options.format, options.quality)
-            .then(resolve)
-            .catch(reject);
-          break;
-        case 'blob':
-          output.blob(canvas, options.format, options.quality)
-            .then(resolve)
-            .catch(reject);
-          break;
-        case 'canvas':
-        default:
-          resolve(canvas);
-          break;
-      }
-    });
+    switch (options.outputType)
+    {
+      case 'base64':
+        return await output.base64(canvas, options.format, options.quality);
+      case 'blob':
+        return await output.blob(canvas, options.format, options.quality);
+      case 'canvas':
+      default:
+        return canvas;
+    }
   };
 
   /**
