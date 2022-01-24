@@ -1,81 +1,20 @@
-import Canvas from './libs/Canvas';
-import * as defaultOptions from './defaultOptions';
+import defaultOptions from './defaultOptions';
 import resizeImage from './libs/resizeImage';
 import * as output from './libs/output';
-import { fileReader, imageLoader } from './libs/loaders';
+import { checkOptions, urlToCanvas, fileToCanvas, getSize } from './local';
 
-/**
- * Image Resize
- *
- * @param {object} getOptions
- */
-function ImageResize(getOptions = {}) {
-
-  // assign options
-  this.options = checkOptions(defaultOptions.base, getOptions);
-
+class ImageResize {
 
   /**
-   * FUNCTION AREA
-   */
-
-  /**
-   * Check options
+   * constructor
    *
-   * @param {object} original
-   * @param {object} target
+   * @param {object} getOptions
    */
-  function checkOptions(original = {}, target={})
+  constructor(getOptions = {})
   {
-    let result = {};
-    Object.keys(original).forEach((key) => {
-      result[key] = target[key] || original[key];
-    });
-    result.width = Number(result.width);
-    result.height = Number(result.height);
-    result.quality = Number(result.quality);
-    result.reSample = Number(result.reSample);
-    return result;
+    // assign options
+    this.options = checkOptions(defaultOptions, getOptions);
   }
-
-  /**
-   * url to canvas
-   * 이미지 주소로 캔버스로 변환
-   *
-   * @param {string} src
-   * @param {object} options
-   * @return {Promise}
-   */
-  async function urlToCanvas(src, options)
-  {
-    let canvas;
-    const img = await imageLoader(src);
-    canvas = new Canvas(img.width, img.height, options.bgColor);
-    canvas.ctx.drawImage(img, 0, 0);
-    return canvas.el;
-  }
-
-  /**
-   * file to canvas
-   * `File`객체를 캔버스로 변환
-   *
-   * @param {File|Blob} file
-   * @param {Object} options
-   * @return {Promise<HTMLCanvasElement>}
-   */
-  async function fileToCanvas(file, options)
-  {
-    const resource = await fileReader(file);
-    const image = await imageLoader(resource);
-    let canvas = new Canvas(image.width, image.height, options.bgColor);
-    canvas.ctx.drawImage(image, 0, 0);
-    return canvas.el;
-  }
-
-
-  /**
-   * METHOD AREA
-   */
 
   /**
    * Play convert
@@ -85,13 +24,14 @@ function ImageResize(getOptions = {}) {
    * @param {string|HTMLInputElement|File|Blob} src
    * @return {Promise<string>}
    */
-  this.play = async (src) => {
+  async play (src)
+  {
     let res = await this.get(src);
     res = await this.resize(res);
     res = await this.resize(res);
     res = await this.output(res);
     return res;
-  };
+  }
 
   /**
    * Get source
@@ -100,10 +40,9 @@ function ImageResize(getOptions = {}) {
    * @param {object} options
    * @return {Promise<HTMLCanvasElement>}
    */
-  this.get = async function(src, options = null)
+  async get (src, options = undefined)
   {
     options = !!options ? checkOptions(this.options, options) : this.options;
-    // console.log('this.get()', src);
     if (typeof src === 'string')
     {
       // image url address
@@ -121,7 +60,7 @@ function ImageResize(getOptions = {}) {
     }
     // error
     throw new Error('Not found source');
-  };
+  }
 
   /**
    * Resize canvas
@@ -130,7 +69,8 @@ function ImageResize(getOptions = {}) {
    * @param {object} options
    * @return {Promise<HTMLCanvasElement>}
    */
-  this.resize = async (canvas, options) => {
+  async resize (canvas, options = undefined)
+  {
     options = !!options ? checkOptions(this.options, options) : this.options;
     // get size
     let size = getSize(canvas.width, canvas.height, options.width, options.height);
@@ -159,7 +99,7 @@ function ImageResize(getOptions = {}) {
    * @param {object} options
    * @return {Promise}
    */
-  this.output = function(canvas, options)
+  output (canvas, options = undefined)
   {
     options = !!options ? checkOptions(this.options, options) : this.options;
     return new Promise((resolve, reject) => {
@@ -189,48 +129,12 @@ function ImageResize(getOptions = {}) {
    * @param {object} value
    * @return {ImageResize}
    */
-  this.updateOptions = function(value)
+  updateOptions (value)
   {
     this.options = checkOptions(this.options, value);
     return this;
   }
-}
 
-/**
- * Get image size
- *
- * @param {number} width original width
- * @param {number} height original height
- * @param {number} targetWidth target width
- * @param {number} targetHeight target height
- * @return {object}
- */
-function getSize(width, height, targetWidth, targetHeight)
-{
-  let w = width;
-  let h = height;
-
-  if (targetWidth && targetHeight)
-  {
-    if (targetWidth > targetHeight) targetHeight = undefined;
-    else targetWidth = undefined;
-  }
-
-  if (targetWidth)
-  {
-    w = targetWidth;
-    h = height * (targetWidth / width);
-  }
-  else if (targetHeight)
-  {
-    w = width * (targetHeight / height);
-    h = targetHeight;
-  }
-
-  return {
-    width: Number(w),
-    height: Number(h),
-  };
 }
 
 export default ImageResize;

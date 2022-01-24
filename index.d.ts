@@ -1,5 +1,19 @@
 declare module 'image-resize' {
 
-  // TODO: 나중에 하나씩 추가할 예정
+  type Options = {
+    bgColor?: string;
+    format?: string;
+    height?: number;
+    outputType?: string;
+    quality?: number;
+    reSample?: number;
+    width?: number;
+  };
 
+  class ImageResize {
+    options: Options;
+    play(src: string|HTMLInputElement|File|Blob): Promise<HTMLCanvasElement>;
+  }
+
+  export default ImageResize;
 }
