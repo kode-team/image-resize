@@ -10,7 +10,6 @@ export function base64(canvas, format='image/jpeg', quality=.75)
 {
   // set format
   format = getFormat(format);
-
   return new Promise(function(resolve, reject) {
     try {
       const uri = canvas.toDataURL(format, quality);
@@ -65,6 +64,9 @@ function getFormat(str)
       break;
     case 'png':
       format = 'image/png';
+      break;
+    case 'webp':
+      format = 'image/webp';
       break;
     default:
       format = str;

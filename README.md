@@ -1,7 +1,7 @@
 # image-resize
 
 개인적으로 마음에 드는 이미지 리사이즈 도구를 못찾아서 이렇게 만들게 되었다.  
-이 도구는 웹 브라우저에서 사용하는 `<Canvas/>`엘리먼트를 사용하여 이미지 리사이즈 한다.
+이 도구는 웹 브라우저에서 사용하는 `<canvas/>`엘리먼트를 사용하여 이미지 리사이즈 한다.
 
 
 ## Demo
@@ -15,13 +15,8 @@ https://redgoose-dev.github.io/image-resize/
 
 `CLI`에서 설치할 프로젝트에서 다음과 같은 명령을 실행한다.
 
-### npm
 ```
 npm install image-resize
-```
-
-### yarn
-```
 yarn add image-resize
 ```
 
@@ -66,7 +61,7 @@ imageResize.play('image.jpg');
 | Name |  Type  | Default | Description |
 |:----:|:------:|:-------:|:------------|
 | quality | number | `.75` | jpg 이미지일때의 이미지 퀄리티값 |
-| format | string | `jpg` | 출력할 포맷. `png,jpg` |
+| format | string | `jpg` | 출력할 포맷. `png,jpg,webp` |
 | outputType | string | `base64 ` | 출력방식. `base64,canvas,blob` |
 | width | number | `320` | 조절할 가로사이즈 |
 | height | number | `null` | 조절할 세로 사이즈. 한쪽값이 있는쪽으로 기준이 되어 조절한다. |

@@ -97,6 +97,9 @@ function getFormat(str) {
     case "png":
       format = "image/png";
       break;
+    case "webp":
+      format = "image/webp";
+      break;
     default:
       format = str;
       break;

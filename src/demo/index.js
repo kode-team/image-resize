@@ -22,9 +22,6 @@ const values = new Proxy({}, {
   },
 });
 
-// TODO: 테스트용으로 잠시 사용중.. 나중에 삭제하기
-console.log('imageResize', imageResize);
-
 /**
  * functions
  */
