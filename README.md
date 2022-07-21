@@ -43,11 +43,11 @@ imageResize.play('image.jpg');
 <script src="./ImageResize.umd.js"></script>
 
 <script>
-var imageResize = new ImageResize({
-  format: 'png',
-  width: 640
-});
-imageResize.play('image.jpg');
+  var imageResize = new ImageResize({
+    format: 'png',
+    width: 640
+  });
+  imageResize.play('image.jpg');
 </script>
 ```
 
@@ -209,7 +209,14 @@ yarn run start
 ```
 
 
-## Support browser
+## Support
+
+### browser
 
 - Google chrome
 - Safari (문제가 생길 수 있습니다.)
+
+### node.js
+
+이 모듈은 브라우저에서 이미지를 리사이즈 하기위하여 만들어졌다.  
+node.js 환경에서는 [sharp](https://github.com/lovell/sharp) 같은 모듈들을 사용을 권장드립니다.
