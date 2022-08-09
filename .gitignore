@@ -5,3 +5,4 @@ node_modules/
 .env.local
 yarn.lock
 package-lock.json
+bun.lockb

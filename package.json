@@ -1,6 +1,6 @@
 {
   "name": "image-resize",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "Resize image for javascript",
   "files": [
     "libs"
@@ -14,11 +14,11 @@
     }
   },
   "type": "module",
-  "types": "types.d.ts",
+  "types": "libs/types.d.ts",
   "scripts": {
     "dev": "vite --config vite.config/vite.docs.js",
     "prebuild": "rm -rf ./docs && rm -rf ./libs",
-    "build": "vite build --config vite.config/vite.docs.js && vite build --config vite.config/vite.libs.js",
+    "build": "vite build --config vite.config/vite.docs.js && vite build --config vite.config/vite.libs.js && cp types.d.ts libs",
     "start": "vite preview --config vite.config/vite.docs.js"
   },
   "repository": {
@@ -49,6 +49,6 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "vite": "^2.9.9"
+    "vite": "^3.0.4"
   }
 }
