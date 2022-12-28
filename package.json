@@ -1,6 +1,6 @@
 {
   "name": "image-resize",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "Resize image for javascript",
   "files": [
     "libs"
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/redgoose-dev/image-resize.git"
+    "url": "git+https://github.com/kode-team/image-resize.git"
   },
   "keywords": [
     "image",
@@ -40,15 +40,15 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/redgoose-dev/image-resize/issues"
+    "url": "https://github.com/kode-team/image-resize/issues"
   },
-  "homepage": "https://github.com/redgoose-dev/image-resize",
+  "homepage": "https://kode-team.github.io/image-resize/",
   "browserslist": [
     "> 1%",
     "last 2 versions"
   ],
   "dependencies": {},
   "devDependencies": {
-    "vite": "^3.0.4"
+    "vite": "^4.0.3"
   }
 }

@@ -109,6 +109,5 @@ export default function resizeImage(options)
     {
       reject(e);
     }
-  });
-
+  })
 }

@@ -7,10 +7,10 @@ const m = {
   reSample: 2,
   bgColor: "#ffffff"
 };
-function h(a = 320, t = 240, e = "#ffffff") {
+function u(a = 320, t = 240, e = "#ffffff") {
   this.el = document.createElement("canvas"), this.ctx = this.el.getContext("2d"), this.el.width = a, this.el.height = t, this.ctx.fillStyle = e, this.ctx.fillRect(0, 0, a, t);
 }
-const o = {
+const g = {
   canvas: null,
   reSample: 2,
   width: 320,
@@ -25,32 +25,32 @@ const o = {
   dh: 0,
   bgColor: "#ffffff"
 };
-function g(a, t, e) {
+function o(a, t, e) {
   return new Promise((r) => {
-    function i(n, c) {
-      const l = Math.pow(2, n);
-      let f = new h(
-        a.width * l,
-        a.height * l,
+    function i(n, l) {
+      const f = Math.pow(2, n);
+      let h = new u(
+        a.width * f,
+        a.height * f,
         a.bgColor
       );
-      f.ctx.drawImage(
-        c,
+      h.ctx.drawImage(
+        l,
         0,
         0,
-        c.width * 0.5,
-        c.height * 0.5
-      ), n > 0 ? i(n - 1, f.el) : r(f.el);
+        l.width * 0.5,
+        l.height * 0.5
+      ), n > 0 ? i(n - 1, h.el) : r(h.el);
     }
     i(t - 1, e);
   });
 }
 function b(a) {
-  a = Object.assign({}, o, a), a.reSample = Math.min(4, a.reSample), a.reSample = Math.max(0, a.reSample);
+  a = Object.assign({}, g, a), a.reSample = Math.min(4, a.reSample), a.reSample = Math.max(0, a.reSample);
   const t = Math.pow(2, a.reSample);
   return new Promise(function(e, r) {
     try {
-      const i = new h(
+      const i = new u(
         a.width * t,
         a.height * t,
         a.bgColor
@@ -65,7 +65,7 @@ function b(a) {
         a.dy * t,
         a.dw * t,
         a.dh * t
-      ), a.reSample > 0 ? g(a, a.reSample, i.el).then(e) : e(i.el);
+      ), a.reSample > 0 ? o(a, a.reSample, i.el).then(e) : e(i.el);
     } catch (i) {
       r(i);
     }
@@ -84,8 +84,8 @@ function y(a, t = "image/jpeg", e = 0.75) {
 function S(a, t = "image/jpeg", e = 0.75) {
   return t = w(t), new Promise(function(r, i) {
     try {
-      const n = a.toDataURL(t, e), c = x(n);
-      r(c);
+      const n = a.toDataURL(t, e), l = x(n);
+      r(l);
     } catch (n) {
       i(n);
     }
@@ -133,7 +133,7 @@ function d(a) {
     r.onload = () => t(r), r.onerror = e, r.src = a, r.crossOrigin = "anonymous", r.alt = "";
   });
 }
-function u(a = {}, t = {}) {
+function c(a = {}, t = {}) {
   let e = {};
   return Object.keys(a).forEach((r) => {
     e[r] = t[r] || a[r];
@@ -142,11 +142,11 @@ function u(a = {}, t = {}) {
 async function C(a, t) {
   let e;
   const r = await d(a);
-  return e = new h(r.width, r.height, t.bgColor), e.ctx.drawImage(r, 0, 0), e.el;
+  return e = new u(r.width, r.height, t.bgColor), e.ctx.drawImage(r, 0, 0), e.el;
 }
 async function s(a, t) {
   const e = await p(a), r = await d(e);
-  let i = new h(r.width, r.height, t.bgColor);
+  let i = new u(r.width, r.height, t.bgColor);
   return i.ctx.drawImage(r, 0, 0), i.el;
 }
 function z(a, t, e, r) {
@@ -155,7 +155,7 @@ function z(a, t, e, r) {
 }
 class j {
   constructor(t = {}) {
-    this.options = u(m, t);
+    this.options = c(m, t);
   }
   async play(t) {
     let e = await this.get(t);
@@ -163,7 +163,7 @@ class j {
   }
   async get(t, e = void 0) {
     var r;
-    if (e = e ? u(this.options, e) : this.options, typeof t == "string")
+    if (e = e ? c(this.options, e) : this.options, typeof t == "string")
       return await C(t, e);
     if (t instanceof File || t instanceof Blob)
       return await s(t, e);
@@ -172,7 +172,7 @@ class j {
     throw new Error("Not found source");
   }
   async resize(t, e = void 0) {
-    e = e ? u(this.options, e) : this.options;
+    e = e ? c(this.options, e) : this.options;
     let r = z(t.width, t.height, e.width, e.height);
     return await b({
       canvas: t,
@@ -191,7 +191,7 @@ class j {
     });
   }
   async output(t, e = void 0) {
-    switch (e = e ? u(this.options, e) : this.options, e.outputType) {
+    switch (e = e ? c(this.options, e) : this.options, e.outputType) {
       case "base64":
         return await y(t, e.format, e.quality);
       case "blob":
@@ -202,7 +202,7 @@ class j {
     }
   }
   updateOptions(t) {
-    return this.options = u(this.options, t), this;
+    return this.options = c(this.options, t), this;
   }
 }
 export {

@@ -8,7 +8,7 @@
 
 데모를 통하여 이미지 url, 이미지 첨부파일을 리사이즈하는 모습을 볼 수 확인할 수 있다.
 
-https://redgoose-dev.github.io/image-resize/
+https://kode-team.github.io/image-resize/
 
 
 ## Installation
@@ -78,7 +78,7 @@ var imageResize = new ImageResize();
 ```
 
 좀더 자세하게 사용하는 방법에 대해서는 데모 소스를 참고.  
-https://github.com/redgoose-dev/image-resize/blob/main/src/demo/index.js
+https://github.com/kode-team/image-resize/blob/main/src/demo/index.js
 
 
 ### play
