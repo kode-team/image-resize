@@ -184,6 +184,7 @@ try {
   const imageResize = new ImageResize();
   let res = await imageResize.updateOptions({ width: 640 }).get('image.jpg');
   res = await imageResize.resize(res);
+  res = imageResize.sharpen(res);
   res = await ready(res);
   res = await imageResize.output(res);
   console.log(res);
