@@ -14,6 +14,7 @@ const values = new Proxy({}, {
       case 'height':
       case 'quality':
       case 'reSample':
+      case 'sharpen':
         value = Number(value)
         break
     }
@@ -63,10 +64,10 @@ async function onSubmitForm(e)
     // basic resize
     let res = await imageResize.updateOptions(values).play(src)
     completeResizeImage(res)
-
     // advanced resize
     // let res = await imageResize.updateOptions(values).get(src)
     // res = await imageResize.resize(res)
+    // res = imageResize.sharpen(res)
     // res = await ready(res)
     // res = await imageResize.output(res)
     // completeResizeImage(res)

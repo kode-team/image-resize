@@ -58,15 +58,16 @@ imageResize.play('image.jpg');
 
 ### Basic
 
-| Name |  Type  | Default | Description |
-|:----:|:------:|:-------:|:------------|
-| quality | number | `.75` | jpg 이미지일때의 이미지 퀄리티값 |
-| format | string | `jpg` | 출력할 포맷. `png,jpg,webp` |
-| outputType | string | `base64 ` | 출력방식. `base64,canvas,blob` |
-| width | number | `320` | 조절할 가로사이즈 |
-| height | number | `null` | 조절할 세로 사이즈. 한쪽값이 있는쪽으로 기준이 되어 조절한다. |
-| reSample | number | `2` | 리새플링 횟수. 수치가 높을수록 경계선이 부드러워지지만 처리속도는 느려진다. 최대 4까지 적용된다. |
-| bgColor | string | `#ffffff` | 캔버스 배경색 |
+|    Name    |  Type  |  Default  | Description                                             |
+|:----------:|:------:|:---------:|:--------------------------------------------------------|
+|  quality   | number |   `.75`   | jpg 이미지일때의 이미지 퀄리티값                                     |
+|   format   | string |   `jpg`   | 출력할 포맷. `png,jpg,webp`                                  |
+| outputType | string | `base64`  | 출력방식. `base64,canvas,blob`                              |
+|   width    | number |   `320`   | 조절할 가로사이즈                                               |
+|   height   | number |  `null`   | 조절할 세로 사이즈. 한쪽값이 있는쪽으로 기준이 되어 조절한다.                     |
+|  reSample  | number |    `2`    | 리새플링 횟수. 수치가 높을수록 경계선이 부드러워지지만 처리속도는 느려진다. 최대 4까지 적용된다. |
+|  bgColor   | string | `#ffffff` | 캔버스 배경색                                                 |
+|  sharpen   | number |  `0.75`   | 선명하게 강도                                                 |
 
 
 ## Methods
@@ -182,9 +183,9 @@ imageResize.output(document.getElementById('canvas')).then();
 try {
   const imageResize = new ImageResize();
   let res = await imageResize.updateOptions({ width: 640 }).get('image.jpg');
-  res = await imageResize.resize(canvas);
+  res = await imageResize.resize(res);
   res = await ready(res);
-  res = await imageResize.output(canvas);
+  res = await imageResize.output(res);
   console.log(res);
 } catch (e) {
   console.error(error);

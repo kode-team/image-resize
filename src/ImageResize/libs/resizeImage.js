@@ -36,7 +36,6 @@ function resize(options, count, parentCanvas)
         options.height * pow,
         options.bgColor
       )
-
       canvasForResize.ctx.drawImage(
         parentCanvas,
         0,
@@ -44,7 +43,6 @@ function resize(options, count, parentCanvas)
         parentCanvas.width * 0.5,
         parentCanvas.height * 0.5,
       )
-
       if (count > 0)
       {
         func(count - 1, canvasForResize.el)
@@ -54,7 +52,6 @@ function resize(options, count, parentCanvas)
         resolve(canvasForResize.el)
       }
     }
-
     func(count - 1, parentCanvas)
   })
 }

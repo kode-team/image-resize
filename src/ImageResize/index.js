@@ -1,6 +1,7 @@
 import defaultOptions from './defaultOptions'
 import resizeImage from './libs/resizeImage'
 import * as output from './libs/output'
+import filterSharpen from './libs/filter-sharpen'
 import { checkOptions, urlToCanvas, fileToCanvas, getSize } from './local'
 
 class ImageResize {
@@ -28,7 +29,7 @@ class ImageResize {
   {
     let res = await this.get(src)
     res = await this.resize(res)
-    res = await this.resize(res)
+    res = await this.sharpen(res)
     res = await this.output(res)
     return res
   }
@@ -76,7 +77,7 @@ class ImageResize {
     let size = getSize(canvas.width, canvas.height, options.width, options.height)
     // resize image
     return await resizeImage({
-      canvas: canvas,
+      canvas,
       reSample: options.reSample,
       width: size.width,
       height: size.height,
@@ -90,6 +91,12 @@ class ImageResize {
       dh: size.height,
       bgColor: options.bgColor,
     })
+  }
+
+  sharpen (canvas, amount = undefined)
+  {
+    amount = (!isNaN(amount)) ? amount : this.options.sharpen
+    return filterSharpen(canvas, amount)
   }
 
   /**

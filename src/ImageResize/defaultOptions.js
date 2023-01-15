@@ -6,4 +6,5 @@ export default {
   height: null,
   reSample: 2,
   bgColor: '#ffffff',
+  sharpen: 0,
 }
