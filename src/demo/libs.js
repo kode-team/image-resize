@@ -5,5 +5,5 @@
  * @return {Promise}
  */
 export const sleep = (delay = 3000) => {
-  return new Promise(resolve => setTimeout(resolve, delay));
-};
+  return new Promise(resolve => setTimeout(resolve, delay))
+}

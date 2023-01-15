@@ -7,11 +7,11 @@
 export function fileReader(file)
 {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = e => resolve(e.target?.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+    const reader = new FileReader()
+    reader.onload = e => resolve(e.target?.result)
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
 }
 
 /**
@@ -23,11 +23,11 @@ export function fileReader(file)
 export function imageLoader(src)
 {
   return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = reject;
-    image.src = src;
-    image.crossOrigin = 'anonymous';
-    image.alt = '';
-  });
+    const image = new Image()
+    image.onload = () => resolve(image)
+    image.onerror = reject
+    image.src = src
+    image.crossOrigin = 'anonymous'
+    image.alt = ''
+  })
 }

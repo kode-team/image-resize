@@ -9,17 +9,18 @@
 export function base64(canvas, format='image/jpeg', quality=.75)
 {
   // set format
-  format = getFormat(format);
+  format = getFormat(format)
   return new Promise(function(resolve, reject) {
-    try {
-      const uri = canvas.toDataURL(format, quality);
-      resolve(uri);
+    try
+    {
+      const uri = canvas.toDataURL(format, quality)
+      resolve(uri)
     }
     catch (e)
     {
-      reject(e);
+      reject(e)
     }
-  });
+  })
 }
 
 /**
@@ -33,18 +34,19 @@ export function base64(canvas, format='image/jpeg', quality=.75)
 export function blob(canvas, format='image/jpeg', quality=.75)
 {
   // set format
-  format = getFormat(format);
+  format = getFormat(format)
   return new Promise(function(resolve, reject) {
-    try {
-      const uri = canvas.toDataURL(format, quality);
-      const blob = dataURItoBlob(uri);
-      resolve(blob);
+    try
+    {
+      const uri = canvas.toDataURL(format, quality)
+      const blob = dataURItoBlob(uri)
+      resolve(blob)
     }
     catch (e)
     {
-      reject(e);
+      reject(e)
     }
-  });
+  })
 }
 
 /**
@@ -55,22 +57,22 @@ export function blob(canvas, format='image/jpeg', quality=.75)
  */
 function getFormat(str)
 {
-  let format;
+  let format
   switch(str)
   {
     case 'jpg':
     case 'jpeg':
-      format = 'image/jpeg';
-      break;
+      format = 'image/jpeg'
+      break
     case 'png':
-      format = 'image/png';
-      break;
+      format = 'image/png'
+      break
     case 'webp':
-      format = 'image/webp';
-      break;
+      format = 'image/webp'
+      break
     default:
-      format = str;
-      break;
+      format = str
+      break
   }
   return format
 }

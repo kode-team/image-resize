@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vite'
 
-const projectName = 'ImageResize';
+const projectName = 'ImageResize'
 const config = defineConfig(() => {
   return {
     publicDir: false,
@@ -14,7 +14,7 @@ const config = defineConfig(() => {
         fileName: (format) => `${projectName}.${format}.js`
       }
     },
-  };
-});
+  }
+})
 
-export default config;
+export default config

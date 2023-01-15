@@ -1,4 +1,4 @@
-import Canvas from './Canvas';
+import Canvas from './Canvas'
 
 // default options
 const defaultOptions = {
@@ -15,7 +15,7 @@ const defaultOptions = {
   dw: 0,
   dh: 0,
   bgColor: '#ffffff',
-};
+}
 
 /**
  * Resize canvas
@@ -30,12 +30,12 @@ function resize(options, count, parentCanvas)
   return new Promise(resolve => {
     function func(count, parentCanvas)
     {
-      const pow = Math.pow(2, count);
+      const pow = Math.pow(2, count)
       let canvasForResize = new Canvas(
         options.width * pow,
         options.height * pow,
         options.bgColor
-      );
+      )
 
       canvasForResize.ctx.drawImage(
         parentCanvas,
@@ -43,20 +43,20 @@ function resize(options, count, parentCanvas)
         0,
         parentCanvas.width * 0.5,
         parentCanvas.height * 0.5,
-      );
+      )
 
       if (count > 0)
       {
-        func(count - 1, canvasForResize.el);
+        func(count - 1, canvasForResize.el)
       }
       else
       {
-        resolve(canvasForResize.el);
+        resolve(canvasForResize.el)
       }
     }
 
-    func(count - 1, parentCanvas);
-  });
+    func(count - 1, parentCanvas)
+  })
 }
 
 /**
@@ -68,12 +68,12 @@ function resize(options, count, parentCanvas)
 export default function resizeImage(options)
 {
   // assign options
-  options = Object.assign({}, defaultOptions, options);
+  options = Object.assign({}, defaultOptions, options)
 
   // set resampling count
-  options.reSample = Math.min(4, options.reSample);
-  options.reSample = Math.max(0, options.reSample);
-  const reSamplingCount = Math.pow(2, options.reSample);
+  options.reSample = Math.min(4, options.reSample)
+  options.reSample = Math.max(0, options.reSample)
+  const reSamplingCount = Math.pow(2, options.reSample)
 
   return new Promise(function(resolve, reject) {
     try
@@ -82,8 +82,7 @@ export default function resizeImage(options)
         options.width * reSamplingCount,
         options.height * reSamplingCount,
         options.bgColor
-      );
-
+      )
       canvas.ctx.drawImage(
         options.canvas,
         options.cx,
@@ -94,20 +93,19 @@ export default function resizeImage(options)
         options.dy * reSamplingCount,
         options.dw * reSamplingCount,
         options.dh * reSamplingCount
-      );
-
+      )
       if (options.reSample > 0)
       {
-        resize(options, options.reSample, canvas.el).then(resolve);
+        resize(options, options.reSample, canvas.el).then(resolve)
       }
       else
       {
-        resolve(canvas.el);
+        resolve(canvas.el)
       }
     }
     catch(e)
     {
-      reject(e);
+      reject(e)
     }
   })
 }

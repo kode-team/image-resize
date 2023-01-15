@@ -6,4 +6,4 @@ export default {
   height: null,
   reSample: 2,
   bgColor: '#ffffff',
-};
+}

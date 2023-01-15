@@ -1,7 +1,7 @@
-import defaultOptions from './defaultOptions';
-import resizeImage from './libs/resizeImage';
-import * as output from './libs/output';
-import { checkOptions, urlToCanvas, fileToCanvas, getSize } from './local';
+import defaultOptions from './defaultOptions'
+import resizeImage from './libs/resizeImage'
+import * as output from './libs/output'
+import { checkOptions, urlToCanvas, fileToCanvas, getSize } from './local'
 
 class ImageResize {
 
@@ -13,7 +13,7 @@ class ImageResize {
   constructor(getOptions = {})
   {
     // assign options
-    this.options = checkOptions(defaultOptions, getOptions);
+    this.options = checkOptions(defaultOptions, getOptions)
   }
 
   /**
@@ -26,11 +26,11 @@ class ImageResize {
    */
   async play (src)
   {
-    let res = await this.get(src);
-    res = await this.resize(res);
-    res = await this.resize(res);
-    res = await this.output(res);
-    return res;
+    let res = await this.get(src)
+    res = await this.resize(res)
+    res = await this.resize(res)
+    res = await this.output(res)
+    return res
   }
 
   /**
@@ -42,24 +42,24 @@ class ImageResize {
    */
   async get (src, options = undefined)
   {
-    options = !!options ? checkOptions(this.options, options) : this.options;
+    options = !!options ? checkOptions(this.options, options) : this.options
     if (typeof src === 'string')
     {
       // image url address
-      return await urlToCanvas(src, options);
+      return await urlToCanvas(src, options)
     }
     else if (src instanceof File || src instanceof Blob)
     {
       // File,Blob
-      return await fileToCanvas(src, options);
+      return await fileToCanvas(src, options)
     }
     else if (src.tagName?.toLowerCase() === 'input' && src.type === 'file')
     {
       // element`<input type="file"/>`
-      return await fileToCanvas(src.files[0], options);
+      return await fileToCanvas(src.files[0], options)
     }
     // error
-    throw new Error('Not found source');
+    throw new Error('Not found source')
   }
 
   /**
@@ -71,9 +71,9 @@ class ImageResize {
    */
   async resize (canvas, options = undefined)
   {
-    options = !!options ? checkOptions(this.options, options) : this.options;
+    options = !!options ? checkOptions(this.options, options) : this.options
     // get size
-    let size = getSize(canvas.width, canvas.height, options.width, options.height);
+    let size = getSize(canvas.width, canvas.height, options.width, options.height)
     // resize image
     return await resizeImage({
       canvas: canvas,
@@ -89,8 +89,8 @@ class ImageResize {
       dw: size.width,
       dh: size.height,
       bgColor: options.bgColor,
-    });
-  };
+    })
+  }
 
   /**
    * Output data
@@ -101,18 +101,18 @@ class ImageResize {
    */
   async output (canvas, options = undefined)
   {
-    options = !!options ? checkOptions(this.options, options) : this.options;
+    options = !!options ? checkOptions(this.options, options) : this.options
     switch (options.outputType)
     {
       case 'base64':
-        return await output.base64(canvas, options.format, options.quality);
+        return await output.base64(canvas, options.format, options.quality)
       case 'blob':
-        return await output.blob(canvas, options.format, options.quality);
+        return await output.blob(canvas, options.format, options.quality)
       case 'canvas':
       default:
-        return canvas;
+        return canvas
     }
-  };
+  }
 
   /**
    * Update options
@@ -122,10 +122,10 @@ class ImageResize {
    */
   updateOptions (value)
   {
-    this.options = checkOptions(this.options, value);
-    return this;
+    this.options = checkOptions(this.options, value)
+    return this
   }
 
 }
 
-export default ImageResize;
+export default ImageResize

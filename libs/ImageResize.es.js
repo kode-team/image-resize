@@ -1,7 +1,9 @@
 const m = {
   quality: 0.75,
   format: "jpg",
+  // png,jpg,webp
   outputType: "base64",
+  // base64,canvas,blob
   width: 320,
   height: null,
   reSample: 2,
@@ -151,16 +153,39 @@ async function s(a, t) {
 }
 function z(a, t, e, r) {
   let i = a, n = t;
-  return e && r && (e > r ? r = void 0 : e = void 0), e ? (i = e, n = t * (e / a)) : r && (i = a * (r / t), n = r), { width: Number(i), height: Number(n) };
+  return e && r && (e > r ? r = void 0 : e = void 0), e ? (i = e, n = t * (e / a)) : r && (i = a * (r / t), n = r), {
+    width: Number(i),
+    height: Number(n)
+  };
 }
 class j {
+  /**
+   * constructor
+   *
+   * @param {object} getOptions
+   */
   constructor(t = {}) {
     this.options = c(m, t);
   }
+  /**
+   * Play convert
+   * 이미지 변환 실행
+   * 이미지 주소로 캔버스로 변환 -> 캔버스를 리사이즈 -> 이미지로 컨버트
+   *
+   * @param {string|HTMLInputElement|File|Blob} src
+   * @return {Promise<string>}
+   */
   async play(t) {
     let e = await this.get(t);
     return e = await this.resize(e), e = await this.resize(e), e = await this.output(e), e;
   }
+  /**
+   * Get source
+   *
+   * @param {string|HTMLInputElement|File|Blob} src
+   * @param {object} options
+   * @return {Promise<HTMLCanvasElement>}
+   */
   async get(t, e = void 0) {
     var r;
     if (e = e ? c(this.options, e) : this.options, typeof t == "string")
@@ -171,6 +196,13 @@ class j {
       return await s(t.files[0], e);
     throw new Error("Not found source");
   }
+  /**
+   * Resize canvas
+   *
+   * @param {HTMLCanvasElement} canvas
+   * @param {object} options
+   * @return {Promise<HTMLCanvasElement>}
+   */
   async resize(t, e = void 0) {
     e = e ? c(this.options, e) : this.options;
     let r = z(t.width, t.height, e.width, e.height);
@@ -190,6 +222,13 @@ class j {
       bgColor: e.bgColor
     });
   }
+  /**
+   * Output data
+   *
+   * @param {HTMLCanvasElement} canvas
+   * @param {object} options
+   * @return {Promise}
+   */
   async output(t, e = void 0) {
     switch (e = e ? c(this.options, e) : this.options, e.outputType) {
       case "base64":
@@ -201,6 +240,12 @@ class j {
         return t;
     }
   }
+  /**
+   * Update options
+   *
+   * @param {object} value
+   * @return {ImageResize}
+   */
   updateOptions(t) {
     return this.options = c(this.options, t), this;
   }
