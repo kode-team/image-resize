@@ -9,6 +9,7 @@ declare module 'image-resize' {
     quality?: number
     reSample?: number
     width?: number
+    sharpen?: number
   }
   type typeSource = string|HTMLInputElement|File|Blob
   type typePromiseCanvas = Promise<HTMLCanvasElement>
