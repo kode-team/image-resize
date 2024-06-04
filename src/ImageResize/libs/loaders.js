@@ -1,6 +1,5 @@
 /**
  * file reader
- *
  * @param {File} file
  * @return {Promise}
  */
@@ -16,7 +15,6 @@ export function fileReader(file)
 
 /**
  * image loader
- *
  * @param {string} src
  * @return {Promise<HTMLImageElement>}
  */

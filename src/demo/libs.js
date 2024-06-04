@@ -1,6 +1,5 @@
 /**
  * sleep (delay tool)
- *
  * @param {number} delay
  * @return {Promise}
  */

@@ -1,9 +1,8 @@
 /**
  * type - base64
- *
  * @param {HTMLCanvasElement} canvas
- * @param {String} format
- * @param {Number} quality
+ * @param {string} format
+ * @param {number} quality
  * @return {Promise}
  */
 export function base64(canvas, format='image/jpeg', quality=.75)
@@ -25,10 +24,9 @@ export function base64(canvas, format='image/jpeg', quality=.75)
 
 /**
  * type - blob
- *
  * @param {HTMLCanvasElement} canvas
- * @param {String} format
- * @param {Number} quality
+ * @param {string} format
+ * @param {number} quality
  * @return {Promise}
  */
 export function blob(canvas, format='image/jpeg', quality=.75)
@@ -51,9 +49,8 @@ export function blob(canvas, format='image/jpeg', quality=.75)
 
 /**
  * Get format
- *
- * @param {String} str
- * @return {String}
+ * @param {string} str
+ * @return {string}
  */
 function getFormat(str)
 {
@@ -80,7 +77,6 @@ function getFormat(str)
 /**
  * Data uri to Blob
  * source : https://gist.github.com/davoclavo/4424731
- *
  * @param {string} dataURI
  * @return {Blob}
  */
@@ -88,10 +84,8 @@ function dataURItoBlob(dataURI)
 {
   // convert base64 to raw binary data held in a string
   const byteString = atob(dataURI.split(',')[1])
-
   // separate out the mime component
   const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-
   // write the bytes of the string to an ArrayBuffer
   const arrayBuffer = new ArrayBuffer(byteString.length)
   let _ia = new Uint8Array(arrayBuffer)
@@ -99,7 +93,6 @@ function dataURItoBlob(dataURI)
   {
     _ia[i] = byteString.charCodeAt(i)
   }
-
   const dataView = new DataView(arrayBuffer)
   return new Blob([dataView], { type: mimeString })
 }

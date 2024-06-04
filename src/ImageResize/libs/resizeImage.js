@@ -19,7 +19,6 @@ const defaultOptions = {
 
 /**
  * Resize canvas
- *
  * @param {Object} options
  * @param {Number} count
  * @param {HTMLCanvasElement} parentCanvas
@@ -58,7 +57,6 @@ function resize(options, count, parentCanvas)
 
 /**
  * Resize image
- *
  * @param {Object} options
  * @return {Promise<HTMLCanvasElement>}
  */
@@ -66,12 +64,10 @@ export default function resizeImage(options)
 {
   // assign options
   options = Object.assign({}, defaultOptions, options)
-
   // set resampling count
   options.reSample = Math.min(4, options.reSample)
   options.reSample = Math.max(0, options.reSample)
   const reSamplingCount = Math.pow(2, options.reSample)
-
   return new Promise(function(resolve, reject) {
     try
     {

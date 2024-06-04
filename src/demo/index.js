@@ -1,4 +1,4 @@
-import ImageResize from '../ImageResize'
+import { ImageResize } from '../ImageResize'
 import { sleep } from './libs'
 import './index.css'
 
@@ -22,10 +22,6 @@ const values = new Proxy({}, {
     return true
   },
 })
-
-/**
- * functions
- */
 
 async function onSubmitForm(e)
 {
