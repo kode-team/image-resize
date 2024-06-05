@@ -107,10 +107,10 @@ class ImageResize {
    * Play convert
    * 이미지 변환 실행
    * 이미지 주소로 캔버스로 변환 -> 캔버스를 리사이즈 -> 이미지로 컨버트
-   * @param {string|HTMLInputElement|File|Blob} src
+   * @param {string|HTMLInputElement|File|Blob|HTMLCanvasElement} src
    * @return {Promise<string>}
    */
-  async play (src)
+  async play(src)
   {
     let res = await this.get(src)
     res = await this.resize(res)
@@ -125,7 +125,7 @@ class ImageResize {
    * @param {object} options
    * @return {Promise<HTMLCanvasElement>}
    */
-  async get (src, options = undefined)
+  async get(src, options = undefined)
   {
     options = !!options ? this.#checkOptions(this.options, options) : this.options
     if (typeof src === 'string')
@@ -153,7 +153,7 @@ class ImageResize {
    * @param {object} options
    * @return {Promise<HTMLCanvasElement>}
    */
-  async resize (canvas, options = undefined)
+  async resize(canvas, options = undefined)
   {
     options = !!options ? this.#checkOptions(this.options, options) : this.options
     // get size
@@ -182,7 +182,7 @@ class ImageResize {
    * @param {HTMLCanvasElement} canvas
    * @param {number} amount
    */
-  sharpen (canvas, amount = undefined)
+  sharpen(canvas, amount = undefined)
   {
     amount = (!isNaN(amount)) ? amount : this.options.sharpen
     return filterSharpen(canvas, amount)
@@ -194,7 +194,7 @@ class ImageResize {
    * @param {object} options
    * @return {Promise}
    */
-  async output (canvas, options = undefined)
+  async output(canvas, options = undefined)
   {
     options = !!options ? this.#checkOptions(this.options, options) : this.options
     switch (options.outputType)
@@ -214,7 +214,7 @@ class ImageResize {
    * @param {object} value
    * @return {ImageResize}
    */
-  updateOptions (value)
+  updateOptions(value)
   {
     this.options = this.#checkOptions(this.options, {
       ...value,

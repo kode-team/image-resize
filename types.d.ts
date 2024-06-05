@@ -3,12 +3,12 @@ declare module 'image-resize' {
   // types
   type typeOptions = {
     bgColor?: string
-    format?: string
+    width?: number
     height?: number
-    outputType?: string
+    format?: 'png'|'jpg'|'webp'
+    outputType?: 'base64'|'canvas'|'blob'
     quality?: number
     reSample?: number
-    width?: number
     sharpen?: number
   }
   type typeSource = string|HTMLInputElement|File|Blob
@@ -16,7 +16,7 @@ declare module 'image-resize' {
   type typeOutput = Promise<string|Blob|HTMLCanvasElement>
 
   // class
-  class ImageResize {
+  export class ImageResize {
     // assets
     options: typeOptions
     // class units
@@ -29,5 +29,6 @@ declare module 'image-resize' {
     updateOptions(value: typeOptions): ImageResize
   }
 
-  export default ImageResize
+  // TODO: resize 함수
+
 }

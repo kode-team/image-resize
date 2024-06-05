@@ -1,8 +1,7 @@
-import { ImageResize } from '../ImageResize'
+import { ImageResize, resize } from '../ImageResize'
 import { sleep } from './libs'
 import './index.css'
 
-const imageResize = new ImageResize()
 const $form = document.getElementById('form')
 const $result = document.getElementById('result')
 const values = new Proxy({}, {
@@ -51,22 +50,34 @@ async function onSubmitForm(e)
     alert('not found source')
     return false
   }
+  delete values.url
+  delete values.upload
 
   // empty result
   $result.innerHTML = ''
 
   try
   {
-    // basic resize
-    let res = await imageResize.updateOptions(values).play(src)
-    completeResizeImage(res)
-    // advanced resize
-    // let res = await imageResize.updateOptions(values).get(src)
-    // res = await imageResize.resize(res)
-    // res = imageResize.sharpen(res)
-    // res = await ready(res)
-    // res = await imageResize.output(res)
-    // completeResizeImage(res)
+    // set values
+    const pureValues = { ...values }
+
+    // method: function
+    // let res = await resize(src, pureValues)
+
+    // method: class instance
+    // let imageResize = new ImageResize(pureValues)
+    // let res = await imageResize.play(src)
+
+    // method: advanced
+    let imageResize = new ImageResize(pureValues)
+    let canvas = await imageResize.get(src)
+    canvas = await imageResize.resize(canvas)
+    canvas = imageResize.sharpen(canvas)
+    canvas = await ready(canvas)
+    let res = await imageResize.output(canvas)
+
+    // to result output image
+    completeResizeImage(pureValues.outputType, res)
   }
   catch(e)
   {
@@ -78,13 +89,13 @@ async function onSubmitForm(e)
 async function ready(canvas)
 {
   await sleep(1000)
-  console.warn('ready:', imageResize.options)
+  console.warn('ready canvas', canvas)
   return canvas
 }
 
-function completeResizeImage(res)
+function completeResizeImage(outputType, res)
 {
-  switch(imageResize.options.outputType)
+  switch(outputType)
   {
     case 'base64':
       const image = new Image()
