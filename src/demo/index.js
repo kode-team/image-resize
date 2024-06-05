@@ -21,10 +21,16 @@ const values = new Proxy({}, {
     return true
   },
 })
+const $el = {
+  submit: document.querySelector('.form__submit > button[type=submit]'),
+  fileUpload: document.getElementById('file-upload'),
+  fileUploadInfo: document.getElementById('file-upload-info'),
+}
 
 async function onSubmitForm(e)
 {
   e.preventDefault()
+  processing(true)
 
   // set values
   const $self = e.target
@@ -83,6 +89,10 @@ async function onSubmitForm(e)
   {
     errorResizeImage(e)
   }
+  finally
+  {
+    processing(false)
+  }
 }
 
 // ready
@@ -116,6 +126,23 @@ function errorResizeImage(e)
 {
   console.error('ERROR EVENT', e)
   alert(`Error resize: ${e.message}`)
+}
+
+function processing(sw)
+{
+  const $submit = $el.submit
+  if (sw)
+  {
+    // on
+    $submit.setAttribute('disabled', '')
+    $submit.innerText = '처리중..'
+  }
+  else
+  {
+    // off
+    $submit.removeAttribute('disabled')
+    $submit.innerText = '이미지 변환'
+  }
 }
 
 // action
