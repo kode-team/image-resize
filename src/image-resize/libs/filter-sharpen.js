@@ -1,25 +1,49 @@
 /**
+ * filter sharpen
+ * @param {OffscreenCanvas} canvas
+ * @param {Number} amount
+ * @param {OffscreenCanvas} newCanvas
+ * @return {any}
+ */
+export default function filterSharpen(canvas, amount = 0, newCanvas)
+{
+  if (amount <= 0) return canvas
+  const newContext = newCanvas.getContext('2d')
+  newContext.drawImage(canvas, 0, 0)
+  const sourceImageData = newContext.getImageData(0, 0, newCanvas.width, newCanvas.height)
+  const blankOutputImageData = newContext.createImageData(newCanvas.width, newCanvas.height)
+  const filteredData = convolution(sourceImageData, blankOutputImageData, [
+    0, -1, 0,
+    -1, 5, -1,
+    0, -1,  0,
+  ])
+  newContext.putImageData(filteredData, 0, 0)
+  // merge sharpen image
+  const context = canvas.getContext('2d')
+  context.globalAlpha = amount || 1
+  context.drawImage(newCanvas, 0, 0)
+  // return
+  return canvas
+}
+
+/**
  * convolution
  * https://img.ly/blog/how-to-apply-filters-in-javascript/
  * @param {ImageData} sourceImageData
  * @param {ImageData} outputImageData
  * @param {Array} kernel
  */
-export default function convolution(sourceImageData, outputImageData, kernel)
+function convolution(sourceImageData, outputImageData, kernel)
 {
   const src = sourceImageData.data
   const dst = outputImageData.data
-
   const srcWidth = sourceImageData.width
   const srcHeight = sourceImageData.height
-
   const side = Math.round(Math.sqrt(kernel.length))
   const halfSide = Math.floor(side / 2)
-
   // padding the output by the convolution kernel
   const w = srcWidth
   const h = srcHeight
-
   // iterating through the output image pixels
   for (let y = 0; y < h; y++)
   {
@@ -52,6 +76,5 @@ export default function convolution(sourceImageData, outputImageData, kernel)
       dst[dstOffset + 3] = a
     }
   }
-
   return outputImageData
 }

@@ -2,32 +2,19 @@ declare module 'image-resize' {
 
   // types
   type typeOptions = {
-    bgColor?: string
-    format?: string
+    width?: number
     height?: number
-    outputType?: string
+    format?: 'png'|'jpg'|'webp'
+    outputType?: 'base64'|'canvas'|'blob'
     quality?: number
     reSample?: number
-    width?: number
     sharpen?: number
+    bgColor?: string
   }
-  type typeSource = string|HTMLInputElement|File|Blob
-  type typePromiseCanvas = Promise<HTMLCanvasElement>
+  type typeSource = string|File|Blob|HTMLCanvasElement
   type typeOutput = Promise<string|Blob|HTMLCanvasElement>
 
-  // class
-  class ImageResize {
-    // assets
-    options: typeOptions
-    // class units
-    constructor(getOptions?: typeOptions)
-    // methods
-    play(src: typeSource): typeOutput
-    get(src: typeSource, options?: typeOptions): typePromiseCanvas
-    resize(canvas: HTMLCanvasElement, options?: typeOptions): typePromiseCanvas
-    output(canvas: HTMLCanvasElement, options?: typeOptions): typeOutput
-    updateOptions(value: typeOptions): ImageResize
-  }
+  // function
+  export default function imageResize(src: typeSource, options?: typeOptions): typeOutput
 
-  export default ImageResize
 }
