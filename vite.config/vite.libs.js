@@ -1,18 +1,22 @@
 import { defineConfig } from 'vite'
 
-const projectName = 'ImageResize'
+const projectName = 'imageResize'
 const config = defineConfig(() => {
   return {
     publicDir: false,
+    base: './',
     build: {
       minify: true,
       outDir: 'libs',
+      assetsDir: '',
       lib: {
-        entry: 'src/ImageResize/index.js',
+        entry: 'src/image-resize/index.js',
         name: projectName,
         formats: [ 'es', 'umd' ],
-        fileName: (format) => `${projectName}.${format}.js`
-      }
+        fileName: (format, a, b) => {
+          return `${projectName}.${format}.js`
+        },
+      },
     },
   }
 })

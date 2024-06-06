@@ -1,16 +1,13 @@
 /**
  * filter sharpen
- * @param {HTMLCanvasElement} canvas
+ * @param {OffscreenCanvas} canvas
  * @param {Number} amount
+ * @param {OffscreenCanvas} newCanvas
  * @return {any}
  */
-export default function filterSharpen(canvas, amount = 0)
+export default function filterSharpen(canvas, amount = 0, newCanvas)
 {
   if (amount <= 0) return canvas
-  // new canvas
-  const newCanvas = document.createElement('canvas')
-  newCanvas.width = canvas.width
-  newCanvas.height = canvas.height
   const newContext = newCanvas.getContext('2d')
   newContext.drawImage(canvas, 0, 0)
   const sourceImageData = newContext.getImageData(0, 0, newCanvas.width, newCanvas.height)

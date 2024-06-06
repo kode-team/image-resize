@@ -1,5 +1,6 @@
-import { ImageResize, resize } from '../ImageResize'
-import { sleep } from './libs'
+import imageResize from '../image-resize/index.js'
+import { fileUploader, getByte } from './libs.js'
+import './fonts.css'
 import './index.css'
 
 const $form = document.getElementById('form')
@@ -27,6 +28,14 @@ const $el = {
   fileUploadInfo: document.getElementById('file-upload-info'),
 }
 
+async function onClickFileUpload()
+{
+  const file = await fileUploader({ accept: 'image/*' })
+  if (!file) return
+  values.upload = file
+  $el.fileUploadInfo.innerText = `${file.name} (${getByte(file.size)})`
+}
+
 async function onSubmitForm(e)
 {
   e.preventDefault()
@@ -43,9 +52,8 @@ async function onSubmitForm(e)
   let src
   if (values.upload)
   {
-    src = $self.querySelector('[name=upload]') // set element
-    src = src.files[0] // set File
-    src = new Blob([src], { type: src.type }) // set Blob
+    src = values.upload
+    // src = new Blob([src], { type: src.type }) // set Blob
   }
   else if (values.url)
   {
@@ -56,32 +64,19 @@ async function onSubmitForm(e)
     alert('not found source')
     return false
   }
-  delete values.url
-  delete values.upload
-
-  // empty result
-  $result.innerHTML = ''
 
   try
   {
     // set values
     const pureValues = { ...values }
-
+    delete pureValues.url
+    delete pureValues.upload
     // method: function
-    // let res = await resize(src, pureValues)
-
-    // method: class instance
-    // let imageResize = new ImageResize(pureValues)
-    // let res = await imageResize.play(src)
-
-    // method: advanced
-    let imageResize = new ImageResize(pureValues)
-    let canvas = await imageResize.get(src)
-    canvas = await imageResize.resize(canvas)
-    canvas = imageResize.sharpen(canvas)
-    canvas = await ready(canvas)
-    let res = await imageResize.output(canvas)
-
+    let res = await imageResize(src, {
+      ...pureValues,
+      width: 0,
+      height: 500,
+    })
     // to result output image
     completeResizeImage(pureValues.outputType, res)
   }
@@ -93,39 +88,6 @@ async function onSubmitForm(e)
   {
     processing(false)
   }
-}
-
-// ready
-async function ready(canvas)
-{
-  await sleep(1000)
-  console.warn('ready canvas', canvas)
-  return canvas
-}
-
-function completeResizeImage(outputType, res)
-{
-  switch(outputType)
-  {
-    case 'base64':
-      const image = new Image()
-      image.src = res
-      $result.appendChild(image)
-      break
-    case 'canvas':
-      $result.appendChild(res)
-      break
-    case 'blob':
-    default:
-      console.log('RESULT:', res)
-      break
-  }
-}
-
-function errorResizeImage(e)
-{
-  console.error('ERROR EVENT', e)
-  alert(`Error resize: ${e.message}`)
 }
 
 function processing(sw)
@@ -145,5 +107,31 @@ function processing(sw)
   }
 }
 
+function completeResizeImage(outputType, res)
+{
+  $result.innerHTML = ''
+  switch(outputType)
+  {
+    case 'base64':
+      const image = new Image()
+      image.src = res
+      $result.appendChild(image)
+      break
+    case 'canvas':
+      $result.appendChild(res)
+      break
+    case 'blob':
+    default:
+      console.log('RESULT:', res)
+      break
+  }
+}
+function errorResizeImage(e)
+{
+  console.error('[ERROR / IMAGE RESIZE]', e.message)
+  alert(`Error resize: ${e.message}`)
+}
+
 // action
 $form.addEventListener('submit', onSubmitForm)
+$el.fileUpload.addEventListener('click', onClickFileUpload)

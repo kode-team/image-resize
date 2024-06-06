@@ -5,12 +5,12 @@
   "files": [
     "libs"
   ],
-  "main": "libs/ImageResize.umd.js",
-  "module": "libs/ImageResize.es.js",
+  "main": "libs/imageResize.umd.js",
+  "module": "libs/imageResize.es.js",
   "exports": {
     ".": {
-      "import": "./libs/ImageResize.es.js",
-      "require": "./libs/ImageResize.umd.js"
+      "import": "./libs/imageResize.es.js",
+      "require": "./libs/imageResize.umd.js"
     }
   },
   "type": "module",

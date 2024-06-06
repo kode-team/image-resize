@@ -1,10 +1,10 @@
 :root {
   --color-base: #111111;
   --color-weak: #666666;
-  --color-main: #6059e9;
+  --color-main: hsl(159deg 90% 42%);
   --color-shape: #f4f4f4;
   --color-field-line: hsl(0 0% 0% / 10%);
-  --size-radius: 2px;
+  --size-radius: 3px;
   --shadow-box:
     0 1px 5px rgba(0, 0, 0, .061),
     0 3px 18px rgba(0, 0, 0, .089),
@@ -17,14 +17,14 @@ html {
 body {
   min-width: 640px;
   margin: 0;
-  padding: 0 50px 100px;
+  padding: 0 50px 80px;
   -webkit-text-size-adjust: none;
   color: var(--color-base);
   font-size: 16px;
   line-height: 1.6;
 }
 body, button, input, textarea, select {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   -webkit-text-size-adjust: 100%;
   text-size-adjust: none;
   color: var(--color-base);
@@ -37,7 +37,7 @@ main {
 
 /* header */
 .header {
-  padding: 32px 0 20px;
+  padding: 42px 0 24px;
   > .header__title {
     margin: 0;
     text-align: center;
@@ -86,7 +86,7 @@ main {
 .box-title {
   margin: 0 0 8px;
   font-size: 18px;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1.05;
   letter-spacing: -.5px;
 }
@@ -233,8 +233,8 @@ main {
     &:empty:after {
       display: grid;
       place-content: center;
-      height: 160px;
-      content: '결과물이 없습니다.';
+      height: 120px;
+      content: '...';
       background: hsla(0 0% 0% / 4%);
       font-size: 13px;
       color: var(--color-weak);
