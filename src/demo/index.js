@@ -72,11 +72,7 @@ async function onSubmitForm(e)
     delete pureValues.url
     delete pureValues.upload
     // method: function
-    let res = await imageResize(src, {
-      ...pureValues,
-      width: 0,
-      height: 500,
-    })
+    const res = await imageResize(src, pureValues)
     // to result output image
     completeResizeImage(pureValues.outputType, res)
   }
