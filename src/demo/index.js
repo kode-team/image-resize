@@ -1,3 +1,4 @@
+import { version } from '../../package.json'
 import imageResize from '../image-resize/index.js'
 import { fileUploader, getByte } from './libs.js'
 import './fonts.css'
@@ -26,6 +27,7 @@ const $el = {
   submit: document.querySelector('.form__submit > button[type=submit]'),
   fileUpload: document.getElementById('file-upload'),
   fileUploadInfo: document.getElementById('file-upload-info'),
+  version: document.getElementById('version'),
 }
 
 async function onClickFileUpload()
@@ -131,3 +133,4 @@ function errorResizeImage(e)
 // action
 $form.addEventListener('submit', onSubmitForm)
 $el.fileUpload.addEventListener('click', onClickFileUpload)
+$el.version.innerText = version
